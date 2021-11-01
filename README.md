@@ -1,3 +1,5 @@
+> I have no plans to reliably update this mod, and it is not guaranteed to work perfectly (for example debug shapes are not cleared when disconnecting currently)
+
 # Minecraft Debug Renderer
 
 Allows servers to render arbitrarily placed and sized debug shapes on the client.
