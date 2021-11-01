@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "id": "debug_renderer",
+  "version": "${version}",
+  "name": "Debug Renderer",
+  "description": "A debug rendering tool for server creators",
+  "authors": [
+    "mattw"
+  ],
+  "contact": {
+    "website": "https://github.com/mworzala/mc_debug_renderer",
+    "repo": "https://github.com/mworzala/mc_debug_renderer"
+  },
+  "license": "MIT",
+  "icon": "assets/debug_renderer/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.mattworzala.debug.client.DebugRendererClient"
+    ],
+    "main": [
+      "com.mattworzala.debug.DebugRenderer"
+    ]
+  },
+  "mixins": [
+    "debug_renderer.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.4",
+    "fabric": "*",
+    "minecraft": "1.17.1"
+  }
+}
