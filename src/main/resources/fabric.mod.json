@@ -5,7 +5,8 @@
   "name": "Debug Renderer",
   "description": "A debug rendering tool for server creators",
   "authors": [
-    "mattw"
+    "mattw",
+    "flamgop"
   ],
   "contact": {
     "website": "https://github.com/mworzala/mc_debug_renderer",
@@ -26,8 +27,8 @@
     "debug_renderer.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.12.4",
+    "fabricloader": ">=0.12.12",
     "fabric": "*",
-    "minecraft": "1.17.1"
+    "minecraft": "1.18.1"
   }
 }

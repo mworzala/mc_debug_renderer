@@ -50,23 +50,38 @@ public class DebugRendererMixin {
 
     @Inject(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider$Immediate;DDD)V", at = @At("RETURN"))
     public void render(MatrixStack matrices, VertexConsumerProvider.Immediate vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
-
-//        pathfindingDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        waterDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        heightmapDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        collisionDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        neighborUpdateDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        structureDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        skyLightDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        worldGenAttemptDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        blockOutlineDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        chunkLoadingDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        villageDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        villageSectionsDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        beeDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        raidCenterDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        goalSelectorDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        gameEventDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugPathfinders)
+            pathfindingDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugWater)
+            waterDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugHeightMap)
+            heightmapDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugCollision)
+            collisionDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugNeighbourUpdate)
+            neighborUpdateDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugStructure)
+            structureDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugSkyLight)
+            skyLightDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugWorldGen)
+            worldGenAttemptDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugBlockOutline)
+            blockOutlineDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugChunkLoading)
+            chunkLoadingDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugVillage)
+            villageDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugVillage)
+            villageSectionsDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugBee)
+            beeDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugRaid)
+            raidCenterDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugGoalSelector)
+            goalSelectorDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+        if (com.mattworzala.debug.DebugRenderer.debugGameEvent)
+            gameEventDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
 
         ClientRenderer.getInstance().render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
     }
