@@ -28,12 +28,12 @@ public class DebugRenderer implements ModInitializer {
     public static boolean debugGoalSelector = false;
     public static boolean debugGameEvent = false;
 
-    private static final KeyBinding GUIKeyBind = KeyBindingHelper.registerKeyBinding(new KeyBinding("Debug GUI", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, "Debug"));
+    private static final KeyBinding GUI_KEY_BIND = KeyBindingHelper.registerKeyBinding(new KeyBinding("debug.gui", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_RIGHT_SHIFT, "debug.category"));
 
     @Override
     public void onInitialize() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (GUIKeyBind.wasPressed() && !client.isPaused()) {
+            if (GUI_KEY_BIND.wasPressed() && !client.isPaused()) {
                 client.setScreen(new CottonClientScreen(Text.of("Debug"), new DebugRenderersGUI()));
             }
         });
