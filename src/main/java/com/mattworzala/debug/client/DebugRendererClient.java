@@ -53,7 +53,7 @@ public class DebugRendererClient implements ClientModInitializer {
                     renderer.addShape(shapeId, new BoxShape(buffer));
                 } else if (shapeType == 1) {
                     renderer.addShape(shapeId, new LineShape(buffer));
-                }else if (shapeType == 2) {
+                } else if (shapeType == 2) {
                     renderer.addShape(shapeId, new TextShape(buffer));
                 }
             }

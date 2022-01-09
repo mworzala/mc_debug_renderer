@@ -8,6 +8,7 @@ import net.minestom.server.coordinate.Vec;
 import net.minestom.server.entity.Player;
 import net.minestom.server.event.GlobalEventHandler;
 import net.minestom.server.event.player.PlayerLoginEvent;
+import net.minestom.server.event.player.PlayerPluginMessageEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.*;
 import net.minestom.server.instance.batch.ChunkBatch;
@@ -48,6 +49,12 @@ public class DebugServer {
                             .build())
                     .build()
                     .sendTo(player);
+        });
+        globalEventHandler.addListener(PlayerPluginMessageEvent.class, event -> {
+            if (!event.getIdentifier().equals("debug:enabled"))
+                return;
+
+            System.out.println(event.getPlayer().getUsername() + " has debug rendering enabled!");
         });
 
         minecraftServer.start("localhost", 25565);

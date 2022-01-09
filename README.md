@@ -22,6 +22,10 @@ dependencies {
 }
 ```
 
+## Checking if enabled
+The client will send a plugin message with the id `debug:enabled` when joining a server if the mod is present.
+The message will have no content.
+
 ## Plugin Messages
 The following plugin messages are supported:
 
@@ -224,7 +228,6 @@ The following plugin messages are supported:
   </tr>
 </tbody>
 </table>
-
 
 # License
 This project is licensed under the [MIT License](./LICENSE).
