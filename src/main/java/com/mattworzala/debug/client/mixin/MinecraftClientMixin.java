@@ -1,6 +1,7 @@
 package com.mattworzala.debug.client.mixin;
 
 import com.mattworzala.debug.client.render.ClientRenderer;
+import com.mattworzala.debug.client.test.DebugRendererTest;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,5 +15,7 @@ public class MinecraftClientMixin {
     @Inject(method = "joinWorld", at = @At("HEAD"))
     public void joinWorld(ClientWorld world, CallbackInfo ci) {
         ClientRenderer.getInstance().removeAllShapes();
+
+        DebugRendererTest.getInstance().onWorldLoad();
     }
 }
