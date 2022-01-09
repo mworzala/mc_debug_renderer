@@ -1,12 +1,26 @@
-> I have no plans to reliably update this mod, and it is not guaranteed to work perfectly (for example debug shapes are not cleared when disconnecting currently)
+> I have no plans to reliably update this mod, and it is not guaranteed to work perfectly
 
 # Minecraft Debug Renderer
 
 Allows servers to render arbitrarily placed and sized debug shapes on the client.
 
-At the moment, the following plugin message is supported:
+# Usage
+Any platform which can send plugin messages is supported.
 
+## Minestom
+A Minestom wrapper is available on Jitpack.
 
+```groovy
+repositories {
+    // ...
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    // ...
+    implementation 'com.github.mworzala.mc_debug_renderer:minestom:$LATEST_COMMIT_HASH'
+}
+```
 
 ## Plugin Messages
 The following plugin messages are supported:
