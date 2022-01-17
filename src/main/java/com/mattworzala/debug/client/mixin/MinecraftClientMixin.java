@@ -15,7 +15,5 @@ public class MinecraftClientMixin {
     @Inject(method = "joinWorld", at = @At("HEAD"))
     public void joinWorld(ClientWorld world, CallbackInfo ci) {
         ClientRenderer.getInstance().removeAllShapes();
-
-        DebugRendererTest.getInstance().onWorldLoad();
     }
 }
