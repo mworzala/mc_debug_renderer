@@ -43,7 +43,7 @@ public class ClientRenderer implements DebugRenderer.Renderer {
         // Polygon offset makes our geometry render over other geometry with the same depth
         // See: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml
         RenderSystem.enablePolygonOffset();
-        RenderSystem.polygonOffset(-3.0f, -3.0f);
+        RenderSystem.polygonOffset(-1.0f, -1.0f);
 
         shapes.values().forEach(shape -> shape.render(cameraX, cameraY, cameraZ));
 
