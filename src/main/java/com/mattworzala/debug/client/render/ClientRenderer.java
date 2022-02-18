@@ -1,5 +1,6 @@
 package com.mattworzala.debug.client.render;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -39,7 +40,14 @@ public class ClientRenderer implements DebugRenderer.Renderer {
 
     @Override
     public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
+        // Polygon offset makes our geometry render over other geometry with the same depth
+        // See: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml
+        RenderSystem.enablePolygonOffset();
+        RenderSystem.polygonOffset(-3.0f, -3.0f);
+
         shapes.values().forEach(shape -> shape.render(cameraX, cameraY, cameraZ));
+
+        RenderSystem.disablePolygonOffset();
     }
 
 }
