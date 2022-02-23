@@ -12,7 +12,6 @@ import java.util.List;
 public class LineShape extends Shape {
     public final List<Vec3d> points;
     public final float lineWidth;
-    public final int argb;
 
     public LineShape(PacketByteBuf buffer) {
         points = buffer.readList(b -> new Vec3d(b.readDouble(), b.readDouble(), b.readDouble()));

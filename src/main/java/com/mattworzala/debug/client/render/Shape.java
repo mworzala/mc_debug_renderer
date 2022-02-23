@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 public abstract class Shape {
 
     public RenderLayer layer = RenderLayer.INLINE;
+    public int argb = 0xFFFFFFFF;
 
     public void render(double cameraX, double cameraY, double cameraZ) {
         // Setup
@@ -14,12 +15,19 @@ public abstract class Shape {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.disableTexture();
         RenderSystem.enableDepthTest();
-        layer.setup();
+
+        if (layer == RenderLayer.INLINE) {
+            int alpha = (argb >> 24) & 0xFF;
+            if (alpha < 240) {
+                RenderSystem.depthMask(false);
+            }
+        } else if (layer == RenderLayer.TOP) {
+            RenderSystem.disableDepthTest();
+        }
 
         render0(cameraX, cameraY, cameraZ);
 
         // Cleanup
-        RenderSystem.depthFunc(GL11.GL_LEQUAL);
         RenderSystem.depthMask(true);
         RenderSystem.enableTexture();
         RenderSystem.disableBlend();
