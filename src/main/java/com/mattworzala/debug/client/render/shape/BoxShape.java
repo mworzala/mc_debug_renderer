@@ -12,7 +12,6 @@ public class BoxShape extends Shape {
     public final double x2;
     public final double y2;
     public final double z2;
-    public final int argb;
 
     public BoxShape(PacketByteBuf buffer) {
         x1 = buffer.readDouble();

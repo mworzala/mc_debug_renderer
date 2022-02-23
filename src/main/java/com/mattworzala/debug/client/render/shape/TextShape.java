@@ -9,7 +9,6 @@ import net.minecraft.util.math.Vec3d;
 public class TextShape extends Shape {
     public final Vec3d position;
     public final String content;
-    public final int argb;
     public final float size;
 
     public TextShape(PacketByteBuf buffer) {
