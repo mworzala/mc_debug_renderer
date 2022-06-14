@@ -1,6 +1,8 @@
 package com.mattworzala.debug.test;
 
 import com.mattworzala.debug.DebugMessage;
+import com.mattworzala.debug.actions.KeyAction;
+import com.mattworzala.debug.actions.KeyActionRegistry;
 import com.mattworzala.debug.shape.Shape;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -15,6 +17,7 @@ import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.instance.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class DebugServer {
@@ -24,6 +27,19 @@ public class DebugServer {
         InstanceManager instanceManager = MinecraftServer.getInstanceManager();
         InstanceContainer instanceContainer = instanceManager.createInstanceContainer();
         instanceContainer.setChunkGenerator(new FlatGenerator());
+
+        KeyActionRegistry keyActionRegistry = new KeyActionRegistry();
+
+        // register key actions
+        KeyAction example = new KeyAction(KeyEvent.VK_O, player -> {
+            player.sendMessage("You pressed o");
+        });
+        keyActionRegistry.register(example);
+
+        KeyAction example2 = new KeyAction(85, player -> {
+            player.sendMessage("You pressed u");
+        });
+        keyActionRegistry.register(example2);
 
         GlobalEventHandler globalEventHandler = MinecraftServer.getGlobalEventHandler();
         globalEventHandler.addListener(PlayerLoginEvent.class, event -> {
@@ -49,8 +65,11 @@ public class DebugServer {
                             .build())
                     .build()
                     .sendTo(player);
+
+            keyActionRegistry.sendPacket(player);
         });
         globalEventHandler.addListener(PlayerPluginMessageEvent.class, event -> {
+            keyActionRegistry.processPluginMessage(event);
             if (!event.getIdentifier().equals("debug:enabled"))
                 return;
 

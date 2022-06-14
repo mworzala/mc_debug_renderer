@@ -1,5 +1,6 @@
 package com.mattworzala.debug.client;
 
+import com.mattworzala.debug.client.actions.KeyActions;
 import com.mattworzala.debug.client.render.*;
 import com.mattworzala.debug.client.render.shape.BoxShape;
 import com.mattworzala.debug.client.render.shape.LineShape;
@@ -32,6 +33,11 @@ public class DebugRendererClient implements ClientModInitializer {
         ClientPlayNetworking.registerGlobalReceiver(
                 new Identifier("debug", "shape"),
                 this::handleSingleOpPacket
+        );
+
+        ClientPlayNetworking.registerGlobalReceiver(
+                new Identifier("debug", "key_actions"),
+                this::handleKeyActions
         );
     }
 
@@ -68,6 +74,14 @@ public class DebugRendererClient implements ClientModInitializer {
             case 3 -> { // CLEAR
                 renderer.removeAllShapes();
             }
+        }
+    }
+
+    private void handleKeyActions(MinecraftClient client, ClientPlayNetworkHandler handler, PacketByteBuf buffer, PacketSender responseSender) {
+        var actionCount = buffer.readVarInt();
+        for (int i = 0; i < actionCount; i++) {
+            int keyCode = buffer.readVarInt();
+            KeyActions.register(keyCode);
         }
     }
 }
