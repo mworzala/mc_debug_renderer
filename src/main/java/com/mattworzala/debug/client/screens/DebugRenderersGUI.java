@@ -4,7 +4,8 @@ import io.github.cottonmc.cotton.gui.client.LightweightGuiDescription;
 import io.github.cottonmc.cotton.gui.widget.WGridPanel;
 import io.github.cottonmc.cotton.gui.widget.WToggleButton;
 import io.github.cottonmc.cotton.gui.widget.data.Insets;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.MutableText;
 
 public class DebugRenderersGUI extends LightweightGuiDescription {
     public DebugRenderersGUI() {
@@ -13,59 +14,59 @@ public class DebugRenderersGUI extends LightweightGuiDescription {
         root.setSize(256, 240);
         root.setInsets(Insets.ROOT_PANEL);
 
-        WToggleButton button = new WToggleButton(new LiteralText("Pathfinders"));
+        WToggleButton button = new WToggleButton(MutableText.of(new LiteralTextContent("Pathfinders")));
         button.setToggle(com.mattworzala.debug.DebugRenderer.debugPathfinders);
         button.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugPathfinders = bool);
 
-        WToggleButton button1 = new WToggleButton(new LiteralText("Water"));
+        WToggleButton button1 = new WToggleButton(MutableText.of(new LiteralTextContent("Water")));
         button1.setToggle(com.mattworzala.debug.DebugRenderer.debugWater);
         button1.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugWater = bool);
 
-        WToggleButton button2 = new WToggleButton(new LiteralText("Height Maps"));
+        WToggleButton button2 = new WToggleButton(MutableText.of(new LiteralTextContent("Height Maps")));
         button2.setToggle(com.mattworzala.debug.DebugRenderer.debugHeightMap);
         button2.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugHeightMap = bool);
 
-        WToggleButton button3 = new WToggleButton(new LiteralText("Collision"));
+        WToggleButton button3 = new WToggleButton(MutableText.of(new LiteralTextContent("Collision")));
         button3.setToggle(com.mattworzala.debug.DebugRenderer.debugCollision);
         button3.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugCollision = bool);
 
-        WToggleButton button4 = new WToggleButton(new LiteralText("Neighbour Updates"));
+        WToggleButton button4 = new WToggleButton(MutableText.of(new LiteralTextContent("Neighbour Updates")));
         button4.setToggle(com.mattworzala.debug.DebugRenderer.debugNeighbourUpdate);
         button4.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugNeighbourUpdate = bool);
 
-        WToggleButton button5 = new WToggleButton(new LiteralText("Structures"));
+        WToggleButton button5 = new WToggleButton(MutableText.of(new LiteralTextContent("Structures")));
         button5.setToggle(com.mattworzala.debug.DebugRenderer.debugStructure);
         button5.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugStructure = bool);
 
-        WToggleButton button6 = new WToggleButton(new LiteralText("Sky Light"));
+        WToggleButton button6 = new WToggleButton(MutableText.of(new LiteralTextContent("Sky Light")));
         button6.setToggle(com.mattworzala.debug.DebugRenderer.debugSkyLight);
         button6.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugSkyLight = bool);
 
-        WToggleButton button7 = new WToggleButton(new LiteralText("World Gen"));
+        WToggleButton button7 = new WToggleButton(MutableText.of(new LiteralTextContent("World Gen")));
         button7.setToggle(com.mattworzala.debug.DebugRenderer.debugWorldGen);
         button7.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugWorldGen = bool);
 
-        WToggleButton button8 = new WToggleButton(new LiteralText("Block Outlines"));
+        WToggleButton button8 = new WToggleButton(MutableText.of(new LiteralTextContent("Block Outlines")));
         button8.setToggle(com.mattworzala.debug.DebugRenderer.debugBlockOutline);
         button8.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugBlockOutline = bool);
 
-        WToggleButton button9 = new WToggleButton(new LiteralText("Chunk Loading"));
+        WToggleButton button9 = new WToggleButton(MutableText.of(new LiteralTextContent("Chunk Loading")));
         button9.setToggle(com.mattworzala.debug.DebugRenderer.debugChunkLoading);
         button9.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugChunkLoading = bool);
 
-        WToggleButton button10 = new WToggleButton(new LiteralText("Bees"));
+        WToggleButton button10 = new WToggleButton(MutableText.of(new LiteralTextContent("Bees")));
         button10.setToggle(com.mattworzala.debug.DebugRenderer.debugBee);
         button10.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugBee = bool);
 
-        WToggleButton button11 = new WToggleButton(new LiteralText("Raids"));
+        WToggleButton button11 = new WToggleButton(MutableText.of(new LiteralTextContent("Raids")));
         button10.setToggle(com.mattworzala.debug.DebugRenderer.debugRaid);
         button10.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugRaid = bool);
 
-        WToggleButton button12 = new WToggleButton(new LiteralText("Goal Selectors"));
+        WToggleButton button12 = new WToggleButton(MutableText.of(new LiteralTextContent("Goal Selectors")));
         button10.setToggle(com.mattworzala.debug.DebugRenderer.debugGoalSelector);
         button10.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugGoalSelector = bool);
 
-        WToggleButton button13 = new WToggleButton(new LiteralText("Game Events"));
+        WToggleButton button13 = new WToggleButton(MutableText.of(new LiteralTextContent("Game Events")));
         button13.setToggle(com.mattworzala.debug.DebugRenderer.debugGameEvent);
         button13.setOnToggle(bool -> com.mattworzala.debug.DebugRenderer.debugGameEvent = bool);
 

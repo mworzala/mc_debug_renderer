@@ -5,10 +5,10 @@ import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.MutableText;
 import org.lwjgl.glfw.GLFW;
 
 public class DebugRenderer implements ModInitializer {
@@ -35,7 +35,7 @@ public class DebugRenderer implements ModInitializer {
     public void onInitialize() {
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (GUI_KEY_BIND.wasPressed() && !client.isPaused()) {
-                client.setScreen(new CottonClientScreen(new LiteralText("Debug"), new DebugRenderersGUI()));
+                client.setScreen(new CottonClientScreen(MutableText.of(new LiteralTextContent("Debug")), new DebugRenderersGUI()));
             }
         });
     }

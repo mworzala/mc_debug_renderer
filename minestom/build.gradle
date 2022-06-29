@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.mattworzala.debug'
-version '1.18.2'
+version '1.19.1'
 
 repositories {
     mavenCentral()
@@ -12,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.github.Minestom:Minestom:9ccbbab698'
+    compileOnly 'com.github.Minestom:Minestom:a04012d9bf'
 
-    testImplementation 'com.github.Minestom:Minestom:9ccbbab698'
+    testImplementation 'com.github.Minestom:Minestom:a04012d9bf'
 }
 
 java {
