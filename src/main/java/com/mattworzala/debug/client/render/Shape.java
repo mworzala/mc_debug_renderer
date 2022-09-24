@@ -1,14 +1,15 @@
 package com.mattworzala.debug.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 
 public abstract class Shape {
 
     public RenderLayer layer = RenderLayer.INLINE;
     public int argb = 0xFFFFFFFF;
 
-    public void render(double cameraX, double cameraY, double cameraZ) {
+    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
         // Setup
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -25,7 +26,7 @@ public abstract class Shape {
             RenderSystem.disableDepthTest();
         }
 
-        render0(cameraX, cameraY, cameraZ);
+        render0(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
 
         // Cleanup
         RenderSystem.depthMask(true);
@@ -33,6 +34,6 @@ public abstract class Shape {
         RenderSystem.disableBlend();
     }
 
-    public abstract void render0(double cameraX, double cameraY, double cameraZ);
+    public abstract void render0(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ);
 
 }

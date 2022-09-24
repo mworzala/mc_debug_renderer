@@ -2,7 +2,9 @@ package com.mattworzala.debug.client.render.shape;
 
 import com.mattworzala.debug.client.render.RenderLayer;
 import com.mattworzala.debug.client.render.Shape;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 
 public class BoxShape extends Shape {
@@ -52,7 +54,7 @@ public class BoxShape extends Shape {
     }
 
     @Override
-    public void render0(double cameraX, double cameraY, double cameraZ) {
+    public void render0(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
         var box = new net.minecraft.util.math.Box(x1, y1, z1, x2, y2, z2)
                 .offset(-cameraX, -cameraY, -cameraZ);
         DebugRenderer.drawBox(box, r() / 255f, g() / 255f, b() / 255f, a() / 255f);

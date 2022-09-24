@@ -1,11 +1,15 @@
 package com.mattworzala.debug.client.render;
 
+import com.mattworzala.debug.client.render.shape.LineShape;
+import com.mattworzala.debug.client.render.shape.OutlineBoxShape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.debug.DebugRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.Vec3d;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -45,7 +49,12 @@ public class ClientRenderer implements DebugRenderer.Renderer {
         RenderSystem.enablePolygonOffset();
         RenderSystem.polygonOffset(-1.0f, -1.0f);
 
-        shapes.values().forEach(shape -> shape.render(cameraX, cameraY, cameraZ));
+        shapes.values().forEach(shape -> shape.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ));
+
+//        new OutlineBoxShape(0, -60, 0, 3, -55, 5, 0x22FFFFFF, RenderLayer.INLINE, 0xFFFF6666, RenderLayer.INLINE, "12345678901234567890", 0xFFFF6666)
+//                .render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+//        new OutlineBoxShape(0, -60, 0, 10, -55, 5, 0x22FFFFFF, RenderLayer.INLINE, 0xFFFF6666, RenderLayer.INLINE, "12345678901234567890", 0xFFFF6666)
+//                .render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
 
         RenderSystem.disablePolygonOffset();
     }

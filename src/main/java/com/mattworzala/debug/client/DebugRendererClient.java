@@ -3,6 +3,7 @@ package com.mattworzala.debug.client;
 import com.mattworzala.debug.client.render.*;
 import com.mattworzala.debug.client.render.shape.BoxShape;
 import com.mattworzala.debug.client.render.shape.LineShape;
+import com.mattworzala.debug.client.render.shape.OutlineBoxShape;
 import com.mattworzala.debug.client.render.shape.TextShape;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -55,6 +56,8 @@ public class DebugRendererClient implements ClientModInitializer {
                     renderer.addShape(shapeId, new LineShape(buffer));
                 } else if (shapeType == 2) {
                     renderer.addShape(shapeId, new TextShape(buffer));
+                } else if (shapeType == 3) {
+                    renderer.addShape(shapeId, new OutlineBoxShape(buffer));
                 }
             }
             case 1 -> { // REMOVE

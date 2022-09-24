@@ -2,7 +2,9 @@ package com.mattworzala.debug.client.render.shape;
 
 import com.mattworzala.debug.client.render.RenderLayer;
 import com.mattworzala.debug.client.render.Shape;
+import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.DebugRenderer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
 
@@ -44,7 +46,7 @@ public class TextShape extends Shape {
     }
 
     @Override
-    public void render0(double cameraX, double cameraY, double cameraZ) {
+    public void render0(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
         DebugRenderer.drawString(content, position.x, position.y, position.z, argb, size, true, 0f, layer == RenderLayer.TOP);
     }
 }
