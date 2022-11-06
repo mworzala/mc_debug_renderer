@@ -1,7 +1,7 @@
 package com.mattworzala.debug.shape;
 
 import com.mattworzala.debug.Layer;
-import net.minestom.server.coordinate.Vec;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.utils.binary.BinaryWriter;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * @param layer    The layer of the cube.
  */
 public record Text(
-        Vec position,
+        Point position,
         String content,
         int color,
         float size,
@@ -39,7 +39,7 @@ public record Text(
 
     public static class Builder {
 
-        private Vec position;
+        private Point position;
         private String content;
         private int color = 0xFFFFFFFF;
         private float size = 0.02f;
@@ -51,7 +51,7 @@ public record Text(
          * @param position The position.
          * @return The builder.
          */
-        public Builder position(Vec position) {
+        public Builder position(Point position) {
             this.position = position;
             return this;
         }

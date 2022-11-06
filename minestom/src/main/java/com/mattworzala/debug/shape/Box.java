@@ -1,7 +1,7 @@
 package com.mattworzala.debug.shape;
 
 import com.mattworzala.debug.Layer;
-import net.minestom.server.coordinate.Vec;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.utils.binary.BinaryWriter;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
@@ -15,8 +15,8 @@ import org.jetbrains.annotations.NotNull;
  * @param layer The layer of the cube.
  */
 public record Box(
-        Vec start,
-        Vec end,
+        Point start,
+        Point end,
         int color,
         Layer layer
 ) implements Shape {
@@ -38,8 +38,8 @@ public record Box(
 
     public static class Builder {
 
-        private Vec start;
-        private Vec end;
+        private Point start;
+        private Point end;
         private int color = 0xFFFFFFFF;
         private Layer layer = Layer.INLINE;
 
@@ -49,7 +49,7 @@ public record Box(
          * @param start The position.
          * @return The builder.
          */
-        public Builder start(Vec start) {
+        public Builder start(Point start) {
             this.start = start;
             return this;
         }
@@ -60,7 +60,7 @@ public record Box(
          * @param end The position.
          * @return The builder.
          */
-        public Builder end(Vec end) {
+        public Builder end(Point end) {
             this.end = end;
             return this;
         }
