@@ -1,13 +1,13 @@
 package com.mattworzala.debug.shape;
 
 import com.mattworzala.debug.Layer;
-import net.minestom.server.coordinate.Vec;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.utils.binary.BinaryWriter;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 public record Text(
-        Vec position,
+        Point position,
         String content,
         int color,
         float size,
@@ -28,13 +28,13 @@ public record Text(
     }
 
     public static class Builder {
-        private Vec position;
+        private Point position;
         private String content;
         private int color = 0xFFFFFFFF;
         private float size = 0.02f;
         private Layer layer = Layer.INLINE;
 
-        public Builder position(Vec position) {
+        public Builder position(Point position) {
             this.position = position;
             return this;
         }

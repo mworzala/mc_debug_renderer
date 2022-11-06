@@ -1,14 +1,14 @@
 package com.mattworzala.debug.shape;
 
 import com.mattworzala.debug.Layer;
-import net.minestom.server.coordinate.Vec;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.utils.binary.BinaryWriter;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 public record OutlineBox(
-        Vec start,
-        Vec end,
+        Point start,
+        Point end,
         int color,
         Layer layer,
         int colorLine,
@@ -39,8 +39,8 @@ public record OutlineBox(
     }
 
     public static class Builder {
-        private Vec start;
-        private Vec end;
+        private Point start;
+        private Point end;
         private int color = 0xFFFFFFFF;
         private Layer layer = Layer.INLINE;
         private int colorLine = 0xFFFFFFFF;
@@ -48,12 +48,12 @@ public record OutlineBox(
         private String text = null;
         private int colorText = 0xFFFFFFFF;
 
-        public Builder start(Vec start) {
+        public Builder start(Point start) {
             this.start = start;
             return this;
         }
 
-        public Builder end(Vec end) {
+        public Builder end(Point end) {
             this.end = end;
             return this;
         }

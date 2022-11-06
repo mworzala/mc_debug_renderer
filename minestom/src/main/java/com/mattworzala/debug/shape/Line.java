@@ -1,7 +1,7 @@
 package com.mattworzala.debug.shape;
 
 import com.mattworzala.debug.Layer;
-import net.minestom.server.coordinate.Vec;
+import net.minestom.server.coordinate.Point;
 import net.minestom.server.utils.binary.BinaryWriter;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public record Line(
-        List<Vec> points,
+        List<Point> points,
         float thickness,
         int color,
         Layer layer
@@ -21,7 +21,7 @@ public record Line(
     public void write(@NotNull BinaryWriter buffer) {
         buffer.writeVarInt(ID);
         buffer.writeVarInt(points.size());
-        for (Vec point : points) {
+        for (Point point : points) {
             buffer.writeDouble(point.x());
             buffer.writeDouble(point.y());
             buffer.writeDouble(point.z());
@@ -32,12 +32,12 @@ public record Line(
     }
 
     public static class Builder {
-        private final List<Vec> points = new ArrayList<>();
+        private final List<Point> points = new ArrayList<>();
         private float thickness = 0.1f;
         private int color = 0xFFFFFFFF;
         private Layer layer = Layer.INLINE;
 
-        public Builder point(Vec point) {
+        public Builder point(Point point) {
             points.add(point);
             return this;
         }
