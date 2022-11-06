@@ -16,6 +16,7 @@ public record OutlineBox(
         String text,
         int colorText
 ) implements Shape {
+
     private static final int ID = 3;
 
     @Override
@@ -39,6 +40,7 @@ public record OutlineBox(
     }
 
     public static class Builder {
+
         private Vec start;
         private Vec end;
         private int color = 0xFFFFFFFF;
@@ -48,11 +50,23 @@ public record OutlineBox(
         private String text = null;
         private int colorText = 0xFFFFFFFF;
 
+        /**
+         * The starting corner of the box. Must be set.
+         *
+         * @param start The position.
+         * @return The builder.
+         */
         public Builder start(Vec start) {
             this.start = start;
             return this;
         }
 
+        /**
+         * The ending corner of the box. Must be set.
+         *
+         * @param end The position.
+         * @return The builder.
+         */
         public Builder end(Vec end) {
             this.end = end;
             return this;
@@ -63,6 +77,14 @@ public record OutlineBox(
             return this;
         }
 
+        /**
+         * The {@link Layer} of the box.
+         * <p>
+         * Defaults to {@link Layer#INLINE} if not set.
+         *
+         * @param layer The layer.
+         * @return The builder.
+         */
         public Builder layer(Layer layer) {
             this.layer = layer;
             return this;
@@ -93,5 +115,7 @@ public record OutlineBox(
             Check.notNull(end, "end");
             return new OutlineBox(start, end, color, layer, colorLine, layerLine, text, colorText);
         }
+
     }
+
 }
