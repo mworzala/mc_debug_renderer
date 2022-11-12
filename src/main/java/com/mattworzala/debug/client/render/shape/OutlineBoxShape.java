@@ -115,7 +115,7 @@ public class OutlineBoxShape extends Shape {
 
             // +x
             matrices.loadIdentity();
-            matrices.translate(pos.x, pos.y, 0);
+            matrices.translate(pos.x, pos.y, box0.minZ);
             matrices.translate(-cameraX, -cameraY, -cameraZ);
             matrices.scale(-scale, -scale, scale);
             textRenderer.draw(matrices, text, -width / 2f, -textRenderer.fontHeight / 2f, argbLine);
@@ -130,7 +130,7 @@ public class OutlineBoxShape extends Shape {
 
             // +z
             matrices.loadIdentity();
-            matrices.translate(0, pos.y, pos.z);
+            matrices.translate(box0.minX, pos.y, pos.z);
             matrices.translate(-cameraX, -cameraY, -cameraZ);
             matrices.multiply(Quaternion.fromEulerXyzDegrees(new Vec3f(0, 90, 0)));
             matrices.scale(-scale, -scale, scale);
