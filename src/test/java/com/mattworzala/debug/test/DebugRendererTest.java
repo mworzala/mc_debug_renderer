@@ -47,7 +47,7 @@ public final class DebugRendererTest {
                 new Vec3d(10, 10, 10),
                 new Vec3d(20, 20, 20),
                 0xFFFF0000, RenderLayer.INLINE,
-                0xFF00FF00, RenderLayer.TOP);
+                0xFF00FF00, RenderLayer.TOP, 4f);
         renderer.add(new Identifier("debug", "test_box"), boxShape);
     }
 
