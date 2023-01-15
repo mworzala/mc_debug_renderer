@@ -1,62 +1,73 @@
 package com.mattworzala.debug.client.render;
 
-import com.mattworzala.debug.client.render.shape.LineShape;
-import com.mattworzala.debug.client.render.shape.OutlineBoxShape;
+import com.mattworzala.debug.client.shape.Shape;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.debug.DebugRenderer;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.NotNull;
+import org.lwjgl.opengl.GL32;
 
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class ClientRenderer implements DebugRenderer.Renderer {
-    private static ClientRenderer instance;
-
-    public static ClientRenderer getInstance() {
-        if (instance == null) {
-            instance = new ClientRenderer();
-        }
-        return instance;
-    }
+public class ClientRenderer {
 
     private final Map<Identifier, Shape> shapes = new ConcurrentHashMap<>();
 
-    public void addShape(Identifier id, Shape shape) {
+    private final DebugRenderContext context = new DebugRenderContext();
+
+    public void add(@NotNull Identifier id, @NotNull Shape shape) {
         shapes.put(id, shape);
     }
 
-    public void removeShape(Identifier id) {
+    public void remove(@NotNull Identifier id) {
         shapes.remove(id);
     }
 
-    // Remove all shapes in namespace
-    public void removeShapes(String namespace) {
-        shapes.entrySet().removeIf(entry -> entry.getKey().getNamespace().equals(namespace));
+    public void remove(@NotNull String namespace) {
+        shapes.keySet().removeIf(id -> id.getNamespace().equals(namespace));
     }
 
-    public void removeAllShapes() {
+    public void clear() {
         shapes.clear();
     }
 
-    @Override
-    public void render(MatrixStack matrices, VertexConsumerProvider vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-        // Polygon offset makes our geometry render over other geometry with the same depth
-        // See: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml
-        RenderSystem.enablePolygonOffset();
-        RenderSystem.polygonOffset(-1.0f, -1.0f);
+    public void render() {
+        MinecraftClient.getInstance().getProfiler().push("debug_renderer");
+        var oldShader = RenderSystem.getShader();
+        try {
+            // Setup
+            RenderSystem.enableBlend();
+            RenderSystem.disableTexture();
+            RenderSystem.enableDepthTest();
+            RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
+            RenderSystem.depthMask(true);
+            // Polygon offset makes our geometry render over other geometry with the same depth
+            // See: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml
+            RenderSystem.enablePolygonOffset();
+            RenderSystem.polygonOffset(-1.0f, -1.0f);
 
-        shapes.values().forEach(shape -> shape.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ));
+            var cameraPos = MinecraftClient.getInstance().gameRenderer.getCamera().getPos();
+            context.init(cameraPos);
 
-//        new OutlineBoxShape(0, -60, 0, 3, -55, 5, 0x22FFFFFF, RenderLayer.INLINE, 0xFFFF6666, RenderLayer.INLINE, "12345678901234567890", 0xFFFF6666)
-//                .render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-//        new OutlineBoxShape(0, -60, 0, 10, -55, 5, 0x22FFFFFF, RenderLayer.INLINE, 0xFFFF6666, RenderLayer.INLINE, "12345678901234567890", 0xFFFF6666)
-//                .render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+            // Rendering
+            for (var shape : shapes.values()) {
+                shape.render(context);
+            }
 
-        RenderSystem.disablePolygonOffset();
+            // Cleanup
+            context.flush();
+        } finally {
+            RenderSystem.disablePolygonOffset();
+            RenderSystem.depthFunc(GL32.GL_LEQUAL);
+            RenderSystem.setShader(() -> oldShader);
+            RenderSystem.enableTexture();
+            RenderSystem.disableBlend();
+            RenderSystem.enableDepthTest();
+            RenderSystem.enableCull();
+            MinecraftClient.getInstance().getProfiler().pop();
+        }
     }
 
 }

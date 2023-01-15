@@ -1,10 +1,8 @@
 package com.mattworzala.debug.client.mixin;
 
-import com.mattworzala.debug.client.render.ClientRenderer;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.debug.*;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.ai.pathing.WaterPathNodeMaker;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -83,6 +81,6 @@ public class DebugRendererMixin {
         if (com.mattworzala.debug.DebugRenderer.debugGameEvent)
             gameEventDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
 
-        ClientRenderer.getInstance().render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
+//        ClientRenderer.getInstance().render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
     }
 }
