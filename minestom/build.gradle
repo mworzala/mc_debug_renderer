@@ -12,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'com.github.Minestom:Minestom:42195c536b'
+    compileOnly 'com.github.hollow-cube.Minestom:Minestom:03ff6dca34'
 
-    testImplementation 'com.github.Minestom:Minestom:42195c536b'
+    testImplementation 'com.github.hollow-cube.Minestom:Minestom:03ff6dca34'
 }
 
 java {

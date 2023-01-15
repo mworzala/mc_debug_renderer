@@ -2,19 +2,25 @@ package com.mattworzala.debug;
 
 import com.mattworzala.debug.shape.Shape;
 import net.kyori.adventure.audience.Audience;
+import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.packet.server.play.PluginMessagePacket;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.utils.PacketUtils;
 import net.minestom.server.utils.binary.BinaryWriter;
 
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import static net.minestom.server.network.NetworkBuffer.VAR_INT;
 
 /**
  * A message to send the client to show debug objects.
  *
  * @param ops The operations to perform.
  */
+@SuppressWarnings("UnstableApiUsage")
 public record DebugMessage(
         List<Operation> ops
 ) {
@@ -37,12 +43,13 @@ public record DebugMessage(
      * @return The packet to send to an audience.
      */
     public PluginMessagePacket getPacket() {
-        BinaryWriter writer = new BinaryWriter(1024);
-        writer.writeVarInt(ops.size());
+        var buffer = new NetworkBuffer(1024);
+        buffer.write(VAR_INT, ops.size());
         for (Operation op : ops) {
-            op.write(writer);
+            op.write(buffer);
         }
-        return new PluginMessagePacket("debug:shapes", writer.toByteArray());
+        byte[] bytes = buffer.readBytes(buffer.writeIndex());
+        return new PluginMessagePacket("debug:shapes", bytes);
     }
 
 

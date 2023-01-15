@@ -3,6 +3,7 @@ package com.mattworzala.debug.client.shape;
 import com.mattworzala.debug.client.render.DebugRenderContext;
 import com.mattworzala.debug.client.render.RenderLayer;
 import com.mattworzala.debug.client.render.RenderType;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,8 @@ public record BoxShape(
         int faceColor,
         @NotNull RenderLayer faceRenderLayer,
         int edgeColor,
-        @NotNull RenderLayer edgeRenderLayer
+        @NotNull RenderLayer edgeRenderLayer,
+        float edgeWidth
 ) implements Shape {
 
     public BoxShape {
@@ -26,7 +28,8 @@ public record BoxShape(
                 new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()),
                 new Vec3d(buffer.readDouble(), buffer.readDouble(), buffer.readDouble()),
                 buffer.readInt(), buffer.readEnumConstant(RenderLayer.class),
-                buffer.readInt(), buffer.readEnumConstant(RenderLayer.class)
+                buffer.readInt(), buffer.readEnumConstant(RenderLayer.class),
+                buffer.readFloat()
         );
     }
 
@@ -44,6 +47,7 @@ public record BoxShape(
         try {
             context.layer(faceRenderLayer);
             context.color(faceColor);
+            RenderSystem.lineWidth(edgeWidth);
 
             context.vertex(min.x, min.y, min.z);
             context.vertex(min.x, max.y, min.z);

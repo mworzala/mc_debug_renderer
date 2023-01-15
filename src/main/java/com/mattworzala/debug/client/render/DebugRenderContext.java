@@ -103,7 +103,7 @@ public class DebugRenderContext {
 
     void flush() {
         if (renderType == null) {
-            throw new IllegalStateException("Cannot flush while not writing.");
+            return;
         }
         try {
             RenderSystem.setShader(renderType.shader());
