@@ -2,50 +2,68 @@ package com.mattworzala.debug.shape;
 
 import com.mattworzala.debug.Layer;
 import net.minestom.server.coordinate.Point;
-import net.minestom.server.utils.binary.BinaryWriter;
+import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static net.minestom.server.network.NetworkBuffer.*;
+
 /**
  * A line connected with multiple points.
  *
  * @param points    The points the line should go through.
- * @param thickness The thickness of the line.
+ * @param lineWidth The thickness of the line.
  * @param color     The color of the line, in ARGB format.
  * @param layer     The layer of the line.
  */
-public record Line(
-        List<Point> points,
-        float thickness,
+@SuppressWarnings("UnstableApiUsage")
+public record LineShape(
+        @NotNull Type type,
+        @NotNull List<Point> points,
         int color,
-        Layer layer
+        @NotNull Layer layer,
+        float lineWidth
 ) implements Shape {
 
-    private static final int ID = 1;
+    public enum Type {
+        SINGLE,
+        STRIP,
+        LOOP
+    }
 
     @Override
-    public void write(@NotNull BinaryWriter buffer) {
-        buffer.writeVarInt(ID);
-        buffer.writeVarInt(points.size());
-        for (Point point : points) {
-            buffer.writeDouble(point.x());
-            buffer.writeDouble(point.y());
-            buffer.writeDouble(point.z());
-        }
-        buffer.writeFloat(thickness);
-        buffer.writeInt(color);
-        buffer.writeVarInt(layer.ordinal());
+    public int id() {
+        return 0;
+    }
+
+    @Override
+    public void write(@NotNull NetworkBuffer buffer) {
+        buffer.writeEnum(Type.class, type);
+        buffer.writeCollection(points, (buf, point) -> {
+            buf.write(DOUBLE, point.x());
+            buf.write(DOUBLE, point.y());
+            buf.write(DOUBLE, point.z());
+        });
+        buffer.write(INT, color);
+        buffer.writeEnum(Layer.class, layer);
+        buffer.write(FLOAT, lineWidth);
     }
 
     public static class Builder {
 
+        private Type type = Type.SINGLE;
         private final List<Point> points = new ArrayList<>();
-        private float thickness = 0.1f;
+        private float lineWidth = 4f;
         private int color = 0xFFFFFFFF;
         private Layer layer = Layer.INLINE;
+
+        public @NotNull Builder type(@NotNull Type type) {
+            this.type = type;
+            return this;
+        }
 
         /**
          * Adds a point to the line.
@@ -55,13 +73,8 @@ public record Line(
          * @param point The point.
          * @return The builder.
          */
-        public Builder point(Point point) {
+        public @NotNull Builder point(@NotNull Point point) {
             points.add(point);
-            return this;
-        }
-
-        public Builder thickness(float thickness) {
-            this.thickness = thickness;
             return this;
         }
 
@@ -73,7 +86,7 @@ public record Line(
          * @param color The color.
          * @return The builder.
          */
-        public Builder color(int color) {
+        public @NotNull Builder color(int color) {
             this.color = color;
             return this;
         }
@@ -86,17 +99,22 @@ public record Line(
          * @param layer The layer.
          * @return The builder.
          */
-        public Builder layer(Layer layer) {
+        public @NotNull Builder layer(@NotNull Layer layer) {
             this.layer = layer;
             return this;
         }
 
+        public @NotNull Builder lineWidth(float lineWidth) {
+            this.lineWidth = lineWidth;
+            return this;
+        }
+
         /**
-         * @return A {@link Line} constructed from the builder parameters.
+         * @return A {@link LineShape} constructed from the builder parameters.
          */
-        public Line build() {
+        public @NotNull LineShape build() {
             Check.argCondition(points.size() < 2, "Line must have at least 2 points");
-            return new Line(points, thickness, color, layer);
+            return new LineShape(type, points, color, layer, lineWidth);
         }
 
     }

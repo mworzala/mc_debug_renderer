@@ -1,6 +1,7 @@
 package com.mattworzala.debug.test;
 
 import com.mattworzala.debug.DebugMessage;
+import com.mattworzala.debug.Layer;
 import com.mattworzala.debug.shape.Shape;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
@@ -36,22 +37,33 @@ public class DebugServer {
 
             DebugMessage.builder()
                     .set("test:box", Shape.box()
-                            .start(new Vec(10, 40, 10))
-                            .end(new Vec(15, 45, 15))
+                            .start(new Vec(5, 40, 5))
+                            .end(new Vec(8, 43, 8))
+                            .faceColor(0x55FF0000)
+                            .edgeColor(0xFFFF0000)
+                            .edgeLayer(Layer.TOP)
                             .build())
                     .set("test:line", Shape.line()
-                            .point(new Vec(10, 40, 10))
-                            .point(new Vec(15, 45, -15))
+                            .point(new Vec(10, 40, 5))
+                            .point(new Vec(13, 43, 13))
+                            .lineWidth(15f)
+                            .color(0x5500FF00)
                             .build())
-                    .set("test:text", Shape.text()
-                            .position(new Vec(5, 40, 5))
-                            .content("Hello World!")
+                    .set("test:spline", Shape.spline()
+                            .point(new Vec(15, 41, 5))
+                            .point(new Vec(18, 43, 8))
+                            .point(new Vec(20, 41, 5))
+                            .loop(true)
+                            .lineWidth(4f)
+                            .color(0xFF0000FF)
                             .build())
                     .build()
                     .sendTo(player);
+
+            player.setAllowFlying(true);
         });
         globalEventHandler.addListener(PlayerPluginMessageEvent.class, event -> {
-            if (!event.getIdentifier().equals("debug:enabled"))
+            if (!event.getIdentifier().equals("debug:hello"))
                 return;
 
             System.out.println(event.getPlayer().getUsername() + " has debug rendering enabled!");

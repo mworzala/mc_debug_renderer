@@ -1,13 +1,18 @@
 package com.mattworzala.debug;
 
 import com.mattworzala.debug.shape.Shape;
+import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.utils.binary.BinaryWriter;
 import org.jetbrains.annotations.NotNull;
 
+import static net.minestom.server.network.NetworkBuffer.STRING;
+import static net.minestom.server.network.NetworkBuffer.VAR_INT;
+
+@SuppressWarnings("UnstableApiUsage")
 public interface Operation {
 
-    void write(@NotNull BinaryWriter buffer);
+    void write(@NotNull NetworkBuffer buffer);
 
     record Set(
             NamespaceID id,
@@ -16,9 +21,10 @@ public interface Operation {
         private static final int ID = 0;
 
         @Override
-        public void write(@NotNull BinaryWriter buffer) {
-            buffer.writeVarInt(ID);
-            buffer.writeSizedString(id.asString());
+        public void write(@NotNull NetworkBuffer buffer) {
+            buffer.write(VAR_INT, ID);
+            buffer.write(STRING, id.asString());
+            buffer.write(VAR_INT, shape.id());
             shape.write(buffer);
         }
     }
@@ -29,9 +35,9 @@ public interface Operation {
         private static final int ID = 1;
 
         @Override
-        public void write(@NotNull BinaryWriter buffer) {
-            buffer.writeVarInt(ID);
-            buffer.writeSizedString(id.asString());
+        public void write(@NotNull NetworkBuffer buffer) {
+            buffer.write(VAR_INT, ID);
+            buffer.write(STRING, id.asString());
         }
     }
 
@@ -41,9 +47,9 @@ public interface Operation {
         private static final int ID = 2;
 
         @Override
-        public void write(@NotNull BinaryWriter buffer) {
-            buffer.writeVarInt(ID);
-            buffer.writeSizedString(namespace);
+        public void write(@NotNull NetworkBuffer buffer) {
+            buffer.write(VAR_INT, ID);
+            buffer.write(STRING, namespace);
         }
     }
 
@@ -51,8 +57,8 @@ public interface Operation {
         private static final int ID = 3;
 
         @Override
-        public void write(@NotNull BinaryWriter buffer) {
-            buffer.writeVarInt(ID);
+        public void write(@NotNull NetworkBuffer buffer) {
+            buffer.write(VAR_INT, ID);
         }
     }
 
