@@ -21,6 +21,7 @@ public record SplineShape(
 ) implements Shape {
     public enum Type {
         CATMULL_ROM,
+        BEZIER,
     }
 
     @Override

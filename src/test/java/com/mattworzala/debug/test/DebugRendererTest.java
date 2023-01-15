@@ -49,6 +49,11 @@ public final class DebugRendererTest {
                 0xFFFF0000, RenderLayer.INLINE,
                 0xFF00FF00, RenderLayer.TOP, 4f);
         renderer.add(new Identifier("debug", "test_box"), boxShape);
+
+
+        var bezierShape = new SplineShape(SplineShape.Type.BEZIER, List.of(pos1, pos2, pos3, pos1), true,
+                0xFFFF0000, RenderLayer.INLINE, 4f);
+        renderer.add(new Identifier("debug", "test_bezier"), bezierShape);
     }
 
 }

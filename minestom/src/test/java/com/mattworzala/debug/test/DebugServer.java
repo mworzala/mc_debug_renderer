@@ -3,6 +3,7 @@ package com.mattworzala.debug.test;
 import com.mattworzala.debug.DebugMessage;
 import com.mattworzala.debug.Layer;
 import com.mattworzala.debug.shape.Shape;
+import com.mattworzala.debug.shape.SplineShape;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.coordinate.Pos;
 import net.minestom.server.coordinate.Vec;
@@ -54,6 +55,20 @@ public class DebugServer {
                             .point(new Vec(18, 43, 8))
                             .point(new Vec(20, 41, 5))
                             .loop(true)
+                            .lineWidth(4f)
+                            .color(0xFF0000FF)
+                            .build())
+                    .set("test:bezier", Shape.spline()
+                            .type(SplineShape.Type.BEZIER)
+                            .point(new Vec(0, 0, 0).add(25, 45, 5))
+                            .point(new Vec(0, 5, 0).add(25, 45, 5))
+                            .point(new Vec(5, 5, 0).add(25, 45, 5))
+                            .point(new Vec(5, 0, 0).add(25, 45, 5))
+
+                            .point(new Vec(5, 0, 0).add(25, 45, 5))
+                            .point(new Vec(5, -5, 0).add(25, 45, 5))
+                            .point(new Vec(0, -5, 0).add(25, 45, 5))
+                            .point(new Vec(0, 0, 0).add(25, 45, 5))
                             .lineWidth(4f)
                             .color(0xFF0000FF)
                             .build())
