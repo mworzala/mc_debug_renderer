@@ -1,6 +1,7 @@
 package com.mattworzala.debug.client.shape;
 
 import com.mattworzala.debug.client.render.RenderLayer;
+import com.mattworzala.debug.client.shape.util.BezierCurve;
 import com.mattworzala.debug.client.shape.util.CatmullRomSpline;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
@@ -12,6 +13,7 @@ public class SplineShape extends LineShape {
 
     public enum Type {
         CATMULL_ROM,
+        BEZIER,
     }
 
     public SplineShape(@NotNull Type type, @NotNull List<Vec3d> points, boolean loop, int color,
@@ -35,6 +37,7 @@ public class SplineShape extends LineShape {
     private static @NotNull List<Vec3d> createPoints(@NotNull Type type, @NotNull List<Vec3d> points, boolean loop) {
         return switch (type) {
             case CATMULL_ROM -> CatmullRomSpline.getCatmullRomChain(points, loop);
+            case BEZIER -> BezierCurve.getBezierChain(points);
         };
     }
 }
