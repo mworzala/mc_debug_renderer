@@ -39,7 +39,7 @@ public class ClientRenderer {
         try {
             // Setup
             RenderSystem.enableBlend();
-            RenderSystem.disableTexture();
+//            RenderSystem.disableTexture();
             RenderSystem.enableDepthTest();
             RenderSystem.blendFunc(GlStateManager.SrcFactor.SRC_ALPHA, GlStateManager.DstFactor.ONE_MINUS_SRC_ALPHA);
             RenderSystem.depthMask(true);
@@ -62,7 +62,7 @@ public class ClientRenderer {
             RenderSystem.disablePolygonOffset();
             RenderSystem.depthFunc(GL32.GL_LEQUAL);
             RenderSystem.setShader(() -> oldShader);
-            RenderSystem.enableTexture();
+//            RenderSystem.enableTexture();
             RenderSystem.disableBlend();
             RenderSystem.enableDepthTest();
             RenderSystem.enableCull();

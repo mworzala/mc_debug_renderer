@@ -1,7 +1,7 @@
-> I have no plans to reliably update this mod, and it is not guaranteed to work perfectly
-
 # Minecraft Debug Renderer
 Allows servers to render arbitrarily placed and sized debug shapes on the client.
+
+![showcase](.github/showcase.png)
 
 # Usage
 Any platform which can send plugin messages is supported. There are server libraries for both Spigot and 

@@ -6,6 +6,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -45,7 +46,7 @@ public class DebugRendererClient implements ClientModInitializer {
         // Test main if present
         try {
             var testMain = Class.forName("com.mattworzala.debug.test.DebugRendererTest");
-            testMain.getMethod("init").invoke(null);
+            testMain.getMethod("init", ClientRenderer.class).invoke(null, renderer);
         } catch (ClassNotFoundException ignored) {
             // If class not found we are probably not running test source sets, so just move on.
         } catch (Exception e) {
