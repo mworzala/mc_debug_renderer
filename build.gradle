@@ -28,7 +28,7 @@ dependencies {
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-    modImplementation include("io.github.cottonmc:LibGui:7.1.0+1.19.4")
+    modImplementation include("io.github.cottonmc:LibGui:8.0.0+1.20")
 
     // PSA: Some older mods, compiled on Loom 0.2.1, might have outdated Maven POMs.
     // You may need to force-disable transitiveness on them.
