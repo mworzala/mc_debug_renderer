@@ -110,7 +110,7 @@ modrinth {
     versionNumber = project.version.toString()
     versionType = "release"
     uploadFile = remapJar
-    gameVersions = ["1.19.4"]
+    gameVersions = ["1.20.1"]
     dependencies {
         required.project "fabric-api"
     }
