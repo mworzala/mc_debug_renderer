@@ -3,14 +3,11 @@ package com.mattworzala.debug;
 import com.mattworzala.debug.shape.Shape;
 import net.kyori.adventure.audience.Audience;
 import net.minestom.server.network.NetworkBuffer;
-import net.minestom.server.network.packet.server.play.PluginMessagePacket;
+import net.minestom.server.network.packet.server.common.PluginMessagePacket;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.utils.PacketUtils;
-import net.minestom.server.utils.binary.BinaryWriter;
 
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static net.minestom.server.network.NetworkBuffer.VAR_INT;

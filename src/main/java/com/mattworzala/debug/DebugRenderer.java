@@ -1,13 +1,12 @@
 package com.mattworzala.debug;
 
-import com.mattworzala.debug.client.screens.DebugRenderersGUI;
-import io.github.cottonmc.cotton.gui.client.CottonClientScreen;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.MutableText;
 import org.lwjgl.glfw.GLFW;
 
@@ -33,10 +32,12 @@ public class DebugRenderer implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if (GUI_KEY_BIND.wasPressed() && !client.isPaused()) {
-                client.setScreen(new CottonClientScreen(MutableText.of(new LiteralTextContent("Debug")), new DebugRenderersGUI()));
-            }
-        });
+//        MinecraftClient
+//        ClientPlayNetworkHandler
+//        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+//            if (GUI_KEY_BIND.wasPressed() && !client.isPaused()) {
+//                client.setScreen(new CottonClientScreen(MutableText.of(new LiteralTextContent("Debug")), new DebugRenderersGUI()));
+//            }
+//        });
     }
 }
