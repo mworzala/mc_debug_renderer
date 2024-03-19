@@ -12,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'dev.hollowcube:minestom-ce-snapshots:1_20_4-08ea9e15f0'
+    compileOnly 'net.minestom:minestom-snapshots:705ec5cc07'
 
-    testImplementation 'dev.hollowcube:minestom-ce-snapshots:1_20_4-08ea9e15f0'
+    testImplementation 'net.minestom:minestom-snapshots:705ec5cc07'
 }
 
 java {

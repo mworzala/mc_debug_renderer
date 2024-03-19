@@ -29,18 +29,14 @@ public record QuadShape(
 
     @Override
     public void render(@NotNull DebugRenderContext context) {
-        context.begin(RenderType.QUADS);
-        RenderSystem.disableCull();
-        try {
-            context.layer(renderLayer);
-            context.color(color);
+        context.submit(this::render0, RenderType.QUADS, renderLayer);
+    }
 
-            context.vertex(a);
-            context.vertex(b);
-            context.vertex(c);
-            context.vertex(d);
-        } finally {
-            context.end();
-        }
+    private void render0(@NotNull DebugRenderContext context) {
+        context.color(color);
+        context.vertex(a);
+        context.vertex(b);
+        context.vertex(c);
+        context.vertex(d);
     }
 }

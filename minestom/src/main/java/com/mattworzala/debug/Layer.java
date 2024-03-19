@@ -11,5 +11,9 @@ public enum Layer {
     /**
      * Objects should be rendered on-top of everything else.
      */
-    TOP
+    TOP,
+    /**
+     * Objects are rendered on top with lower opacity when behind another object
+     */
+    MIXED
 }

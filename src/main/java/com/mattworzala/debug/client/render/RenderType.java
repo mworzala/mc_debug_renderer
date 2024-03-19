@@ -24,11 +24,13 @@ public record RenderType(
 
     public static final RenderType LINES = new RenderType(
             VertexFormat.DrawMode.LINES,
-            new VertexFormat(ImmutableMap.<String, VertexFormatElement>builder()
-                    .put("Position", VertexFormats.POSITION_ELEMENT)
-                    .put("Color", VertexFormats.COLOR_ELEMENT)
-                    .put("Normal", VertexFormats.NORMAL_ELEMENT)
-                    .build()),
+            VertexFormats.LINES,
+            GameRenderer::getRenderTypeLinesProgram
+    );
+
+    public static final RenderType LINE_STRIP = new RenderType(
+            VertexFormat.DrawMode.LINE_STRIP,
+            VertexFormats.LINES,
             GameRenderer::getRenderTypeLinesProgram
     );
 

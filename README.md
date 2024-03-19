@@ -4,8 +4,8 @@ Allows servers to render arbitrarily placed and sized debug shapes on the client
 ![showcase](.github/showcase.png)
 
 # Usage
-Any platform which can send plugin messages is supported. There are server libraries for both Spigot and 
-Minestom, which are available on Jitpack.
+Any platform which can send plugin messages is supported. There is a server library for Minestom, 
+which is available on Jitpack.
 
 ```groovy
 repositories {
@@ -16,8 +16,6 @@ repositories {
 dependencies {
     // Minestom
     implementation 'com.github.mworzala.mc_debug_renderer:minestom:$LATEST_COMMIT_HASH'
-    // Spigot
-    implementation 'com.github.mworzala.mc_debug_renderer:spigot:$LATEST_COMMIT_HASH'
 }
 ```
 

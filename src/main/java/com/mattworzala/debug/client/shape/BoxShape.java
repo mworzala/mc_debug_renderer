@@ -3,7 +3,6 @@ package com.mattworzala.debug.client.shape;
 import com.mattworzala.debug.client.render.DebugRenderContext;
 import com.mattworzala.debug.client.render.RenderLayer;
 import com.mattworzala.debug.client.render.RenderType;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -35,98 +34,84 @@ public record BoxShape(
 
     @Override
     public void render(@NotNull DebugRenderContext context) {
-        renderFaces(context);
-        if ((edgeColor & 0xFF000000) != 0)
-            renderEdges(context);
         if ((faceColor & 0xFF000000) != 0)
-            renderEdges(context);
+            context.submit(this::renderFaces, RenderType.QUADS, faceRenderLayer);
+        if ((edgeColor & 0xFF000000) != 0)
+            context.submit(this::renderEdges, RenderType.LINES, edgeRenderLayer);
     }
 
     private void renderFaces(@NotNull DebugRenderContext context) {
-        context.begin(RenderType.QUADS);
-        try {
-            context.layer(faceRenderLayer);
-            context.color(faceColor);
-            RenderSystem.lineWidth(edgeWidth);
+        context.color(faceColor);
 
-            context.vertex(min.x, min.y, min.z);
-            context.vertex(min.x, max.y, min.z);
-            context.vertex(max.x, max.y, min.z);
-            context.vertex(max.x, min.y, min.z);
+        context.vertex((float) min.x, (float) min.y, (float) min.z);
+        context.vertex((float) min.x, (float) max.y, (float) min.z);
+        context.vertex((float) max.x, (float) max.y, (float) min.z);
+        context.vertex((float) max.x, (float) min.y, (float) min.z);
 
-            context.vertex(max.x, min.y, max.z);
-            context.vertex(max.x, max.y, max.z);
-            context.vertex(min.x, max.y, max.z);
-            context.vertex(min.x, min.y, max.z);
+        context.vertex((float) max.x, (float) min.y, (float) max.z);
+        context.vertex((float) max.x, (float) max.y, (float) max.z);
+        context.vertex((float) min.x, (float) max.y, (float) max.z);
+        context.vertex((float) min.x, (float) min.y, (float) max.z);
 
-            context.vertex(min.x, min.y, max.z);
-            context.vertex(min.x, max.y, max.z);
-            context.vertex(min.x, max.y, min.z);
-            context.vertex(min.x, min.y, min.z);
+        context.vertex((float) min.x, (float) min.y, (float) max.z);
+        context.vertex((float) min.x, (float) max.y, (float) max.z);
+        context.vertex((float) min.x, (float) max.y, (float) min.z);
+        context.vertex((float) min.x, (float) min.y, (float) min.z);
 
-            context.vertex(max.x, min.y, min.z);
-            context.vertex(max.x, max.y, min.z);
-            context.vertex(max.x, max.y, max.z);
-            context.vertex(max.x, min.y, max.z);
+        context.vertex((float) max.x, (float) min.y, (float) min.z);
+        context.vertex((float) max.x, (float) max.y, (float) min.z);
+        context.vertex((float) max.x, (float) max.y, (float) max.z);
+        context.vertex((float) max.x, (float) min.y, (float) max.z);
 
-            context.vertex(min.x, min.y, max.z);
-            context.vertex(min.x, min.y, min.z);
-            context.vertex(max.x, min.y, min.z);
-            context.vertex(max.x, min.y, max.z);
+        context.vertex((float) min.x, (float) min.y, (float) max.z);
+        context.vertex((float) min.x, (float) min.y, (float) min.z);
+        context.vertex((float) max.x, (float) min.y, (float) min.z);
+        context.vertex((float) max.x, (float) min.y, (float) max.z);
 
-            context.vertex(max.x, max.y, max.z);
-            context.vertex(max.x, max.y, min.z);
-            context.vertex(min.x, max.y, min.z);
-            context.vertex(min.x, max.y, max.z);
-        } finally {
-            context.end();
-        }
+        context.vertex((float) max.x, (float) max.y, (float) max.z);
+        context.vertex((float) max.x, (float) max.y, (float) min.z);
+        context.vertex((float) min.x, (float) max.y, (float) min.z);
+        context.vertex((float) min.x, (float) max.y, (float) max.z);
     }
 
     private void renderEdges(@NotNull DebugRenderContext context) {
-        context.begin(RenderType.LINES);
-        try {
-            context.layer(edgeRenderLayer);
-            context.color(edgeColor);
+        context.color(edgeColor);
 
-            context.vertex(min.x, min.y, min.z);
-            context.vertex(min.x, max.y, min.z);
+        context.vertex((float) min.x, (float) min.y, (float) min.z);
+        context.vertex((float) min.x, (float) max.y, (float) min.z);
 
-            context.vertex(min.x, max.y, min.z);
-            context.vertex(max.x, max.y, min.z);
+        context.vertex((float) min.x, (float) max.y, (float) min.z);
+        context.vertex((float) max.x, (float) max.y, (float) min.z);
 
-            context.vertex(max.x, max.y, min.z);
-            context.vertex(max.x, min.y, min.z);
+        context.vertex((float) max.x, (float) max.y, (float) min.z);
+        context.vertex((float) max.x, (float) min.y, (float) min.z);
 
-            context.vertex(max.x, min.y, min.z);
-            context.vertex(min.x, min.y, min.z);
+        context.vertex((float) max.x, (float) min.y, (float) min.z);
+        context.vertex((float) min.x, (float) min.y, (float) min.z);
 
-            context.vertex(min.x, min.y, max.z);
-            context.vertex(min.x, max.y, max.z);
+        context.vertex((float) min.x, (float) min.y, (float) max.z);
+        context.vertex((float) min.x, (float) max.y, (float) max.z);
 
-            context.vertex(min.x, max.y, max.z);
-            context.vertex(max.x, max.y, max.z);
+        context.vertex((float) min.x, (float) max.y, (float) max.z);
+        context.vertex((float) max.x, (float) max.y, (float) max.z);
 
-            context.vertex(max.x, max.y, max.z);
-            context.vertex(max.x, min.y, max.z);
+        context.vertex((float) max.x, (float) max.y, (float) max.z);
+        context.vertex((float) max.x, (float) min.y, (float) max.z);
 
-            context.vertex(max.x, min.y, max.z);
-            context.vertex(min.x, min.y, max.z);
+        context.vertex((float) max.x, (float) min.y, (float) max.z);
+        context.vertex((float) min.x, (float) min.y, (float) max.z);
 
-            context.vertex(min.x, min.y, min.z);
-            context.vertex(min.x, min.y, max.z);
+        context.vertex((float) min.x, (float) min.y, (float) min.z);
+        context.vertex((float) min.x, (float) min.y, (float) max.z);
 
-            context.vertex(min.x, max.y, min.z);
-            context.vertex(min.x, max.y, max.z);
+        context.vertex((float) min.x, (float) max.y, (float) min.z);
+        context.vertex((float) min.x, (float) max.y, (float) max.z);
 
-            context.vertex(max.x, max.y, min.z);
-            context.vertex(max.x, max.y, max.z);
+        context.vertex((float) max.x, (float) max.y, (float) min.z);
+        context.vertex((float) max.x, (float) max.y, (float) max.z);
 
-            context.vertex(max.x, min.y, min.z);
-            context.vertex(max.x, min.y, max.z);
-        } finally {
-            context.end();
-        }
+        context.vertex((float) max.x, (float) min.y, (float) min.z);
+        context.vertex((float) max.x, (float) min.y, (float) max.z);
     }
 
 }

@@ -42,34 +42,32 @@ public class LineShape implements Shape {
 
     @Override
     public void render(@NotNull DebugRenderContext context) {
-        context.begin(RenderType.LINES);
-        try {
-            context.layer(renderLayer);
-            context.color(color);
-            RenderSystem.lineWidth(lineWidth);
-            switch (type) {
-                case SINGLE -> {
-                    for (var point : points) {
-                        context.vertex(point);
-                    }
-                }
-                case STRIP -> {
-                    for (int i = 0; i < points.size() - 1; i++) {
-                        context.vertex(points.get(i));
-                        context.vertex(points.get(i + 1));
-                    }
-                }
-                case LOOP -> {
-                    for (int i = 0; i < points.size() - 1; i++) {
-                        context.vertex(points.get(i));
-                        context.vertex(points.get(i + 1));
-                    }
-                    context.vertex(points.get(points.size() - 1));
-                    context.vertex(points.get(0));
+        context.submit(this::render0, RenderType.LINES, renderLayer);
+    }
+
+    private void render0(@NotNull DebugRenderContext context) {
+        context.color(color);
+        RenderSystem.lineWidth(lineWidth);
+        switch (type) {
+            case SINGLE -> {
+                for (var point : points) {
+                    context.vertex(point);
                 }
             }
-        } finally {
-            context.end();
+            case STRIP -> {
+                for (int i = 0; i < points.size() - 1; i++) {
+                    context.vertex(points.get(i));
+                    context.vertex(points.get(i + 1));
+                }
+            }
+            case LOOP -> {
+                for (int i = 0; i < points.size() - 1; i++) {
+                    context.vertex(points.get(i));
+                    context.vertex(points.get(i + 1));
+                }
+                context.vertex(points.get(points.size() - 1));
+                context.vertex(points.get(0));
+            }
         }
     }
 }

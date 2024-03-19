@@ -2,69 +2,84 @@ package com.mattworzala.debug.client.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
+
+import java.util.function.Consumer;
 
 public class DebugRenderContext {
+    private final Matrix4f positionMat;
+    private final Matrix3f normalMat;
+
     private RenderType renderType = null;
     private BufferBuilder builder = null;
 
-    private Vec3d cameraPos;
-
-    private int a = 0, r = 0, g = 0, b = 0;
+    private float a = 1f, r = 1f, g = 1f, b = 1f;
 
     // Line state
     private boolean hasLast = false;
-    private double lastX, lastY, lastZ;
+    private float lastX, lastY, lastZ;
 
+    public DebugRenderContext(Matrix4f positionMat, Matrix3f normalMat) {
+        this.positionMat = positionMat;
+        this.normalMat = normalMat;
+    }
+
+    public void submit(@NotNull Consumer<DebugRenderContext> func, @NotNull RenderType renderType, @NotNull RenderLayer layer) {
+        begin(renderType);
+        func.accept(this);
+
+        if (layer != RenderLayer.TOP) {
+            RenderSystem.enableDepthTest();
+        } else {
+            RenderSystem.disableDepthTest();
+        }
+        RenderSystem.setShaderColor(1.0f, 1f, 1f, 1f);
+        BufferRenderer.drawWithGlobalProgram(this.builder.end());
+
+        if (layer == RenderLayer.MIXED) {
+            begin(renderType);
+            func.accept(this);
+            RenderSystem.disableDepthTest();
+            RenderSystem.setShaderColor(1f, 1f, 1f, 0.2f);
+            BufferRenderer.drawWithGlobalProgram(this.builder.end());
+        }
+
+        RenderSystem.enableDepthTest();
+    }
 
     public void begin(@NotNull RenderType renderType) {
-        if (this.renderType != null) {
-            flush();
-        }
+        this.renderType = renderType;
+        this.builder = Tessellator.getInstance().getBuffer();
+        this.builder.begin(renderType.drawMode(), renderType.vertexFormat());
+        RenderSystem.setShader(renderType.shader());
 
         if (renderType == RenderType.QUADS) {
             RenderSystem.enableCull();
         } else {
             RenderSystem.disableCull();
         }
-
-        this.renderType = renderType;
-        this.builder = Tessellator.getInstance().getBuffer();
-        this.builder.begin(renderType.drawMode(), renderType.vertexFormat());
-    }
-
-    public void end() {
-        //todo probably can delete this, though i wouldnt mind min sanity check here
-    }
-
-    public void layer(@NotNull RenderLayer layer) {
-        if (layer == RenderLayer.TOP) {
-            RenderSystem.disableDepthTest();
-        } else {
-            RenderSystem.enableDepthTest();
-        }
     }
 
     public void color(int argb) {
-        this.a = (argb >> 24) & 0xFF;
-        this.r = (argb >> 16) & 0xFF;
-        this.g = (argb >> 8) & 0xFF;
-        this.b = argb & 0xFF;
+        this.a = ((argb >> 24) & 0xFF) / 255f;
+        this.r = ((argb >> 16) & 0xFF) / 255f;
+        this.g = ((argb >> 8) & 0xFF) / 255f;
+        this.b = (argb & 0xFF) / 255f;
     }
 
     public void vertex(@NotNull Vec3d point) {
-        vertex(point.x, point.y, point.z);
+        vertex((float) point.x, (float) point.y, (float) point.z);
     }
 
-    public void vertex(double x, double y, double z) {
-        x -= cameraPos.x;
-        y -= cameraPos.y;
-        z -= cameraPos.z;
-
+    public void vertex(float x, float y, float z) {
         if (renderType == RenderType.QUADS) {
-            builder.vertex(x, y, z)
+            builder.vertex(positionMat, x, y, z)
                     .color(r, g, b, a)
                     .next();
         } else if (renderType == RenderType.LINES) {
@@ -76,48 +91,23 @@ public class DebugRenderContext {
                 return;
             }
 
-            var normal = computeNormal(lastX, lastY, lastZ, x, y, z);
-
-            builder.vertex(lastX, lastY, lastZ)
+            float dx = x - lastX;
+            float dy = y - lastY;
+            float dz = z - lastZ;
+            float distanceInv = 1.0f / (float)Math.sqrt(dx * dx + dy * dy + dz * dz);
+            this.builder.vertex(positionMat, lastX, lastY, lastZ)
                     .color(r, g, b, a)
-                    .normal((float) normal.x, (float) normal.y, (float) normal.z)
+                    .normal(normalMat, dx *= distanceInv, dy *= distanceInv, dz *= distanceInv)
                     .next();
-
-            builder.vertex(x, y, z)
+            this.builder.vertex(positionMat, x, y, z)
                     .color(r, g, b, a)
-                    .normal((float) normal.x, (float) normal.y, (float) normal.z)
+                    .normal(normalMat, dx, dy, dz)
                     .next();
 
             hasLast = false;
         } else {
             throw new IllegalStateException("Cannot render vertex with render type " + renderType);
         }
-    }
-
-
-    // Internal details
-
-    void init(@NotNull Vec3d cameraPos) {
-        this.cameraPos = cameraPos;
-    }
-
-    void flush() {
-        if (renderType == null) {
-            return;
-        }
-        try {
-            RenderSystem.setShader(renderType.shader());
-            Tessellator.getInstance().draw();
-        } finally {
-            renderType = null;
-            builder = null;
-        }
-    }
-
-    private Vec3d computeNormal(double x1, double y1, double z1, double x2, double y2, double z2) {
-        double dx = x2 - x1, dy = y2 - y1, dz = z2 - z1;
-        double length = Math.sqrt(dx * dx + dy * dy + dz * dz);
-        return new Vec3d(dx / length, dy / length, dz / length);
     }
 
 }

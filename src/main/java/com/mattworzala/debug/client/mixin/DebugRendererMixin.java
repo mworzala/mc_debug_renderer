@@ -80,7 +80,5 @@ public class DebugRendererMixin {
             goalSelectorDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
         if (com.mattworzala.debug.DebugRenderer.debugGameEvent)
             gameEventDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
-
-//        ClientRenderer.getInstance().render(matrices, vertexConsumers, cameraX, cameraY, cameraZ);
     }
 }
