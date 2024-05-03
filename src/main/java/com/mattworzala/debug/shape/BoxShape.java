@@ -1,8 +1,8 @@
-package com.mattworzala.debug.client.shape;
+package com.mattworzala.debug.shape;
 
-import com.mattworzala.debug.client.render.DebugRenderContext;
-import com.mattworzala.debug.client.render.RenderLayer;
-import com.mattworzala.debug.client.render.RenderType;
+import com.mattworzala.debug.render.DebugRenderContext;
+import com.mattworzala.debug.render.RenderLayer;
+import com.mattworzala.debug.render.RenderType;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -38,6 +38,12 @@ public record BoxShape(
             context.submit(this::renderFaces, RenderType.QUADS, faceRenderLayer);
         if ((edgeColor & 0xFF000000) != 0)
             context.submit(this::renderEdges, RenderType.LINES, edgeRenderLayer);
+    }
+
+    @Override
+    public double distanceTo(@NotNull Vec3d pos) {
+        var center = min.add(max).multiply(0.5);
+        return pos.squaredDistanceTo(center);
     }
 
     private void renderFaces(@NotNull DebugRenderContext context) {

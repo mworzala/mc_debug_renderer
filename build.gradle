@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.5-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -30,7 +30,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 16
+def targetJavaVersion = 21
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly
@@ -97,7 +97,7 @@ modrinth {
     versionNumber = project.version.toString()
     versionType = "release"
     uploadFile = remapJar
-    gameVersions = ["1.20.4"]
+    gameVersions = ["1.20.6"]
     dependencies {
         required.project "fabric-api"
     }

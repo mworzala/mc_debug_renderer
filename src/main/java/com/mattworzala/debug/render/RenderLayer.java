@@ -1,4 +1,4 @@
-package com.mattworzala.debug.client.render;
+package com.mattworzala.debug.render;
 
 public enum RenderLayer {
     INLINE,

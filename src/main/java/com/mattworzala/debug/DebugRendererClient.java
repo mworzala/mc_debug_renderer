@@ -1,7 +1,8 @@
-package com.mattworzala.debug.client;
+package com.mattworzala.debug;
 
-import com.mattworzala.debug.client.render.ClientRenderer;
-import com.mattworzala.debug.client.shape.Shape;
+import com.mattworzala.debug.network.DebugHelloPacket;
+import com.mattworzala.debug.network.DebugShapesPacket;
+import com.mattworzala.debug.render.ClientRenderer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -10,22 +11,18 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class DebugRendererClient implements ClientModInitializer {
-    private static final Logger LOGGER = LogManager.getLogger();
     public static final int PROTOCOL_VERSION = 2;
-    public static final Identifier PACKET_ID = new Identifier("debug", "shapes");
-
+    private static final Logger LOGGER = LogManager.getLogger();
     private final ClientRenderer renderer = new ClientRenderer();
 
     @Override
@@ -40,8 +37,10 @@ public class DebugRendererClient implements ClientModInitializer {
         WorldRenderEvents.LAST.register(this::handleRenderLast);
 
         // Networking
-        ClientPlayNetworking.registerGlobalReceiver(PACKET_ID, this::handlePacket);
+        PayloadTypeRegistry.playC2S().register(DebugHelloPacket.PACKET_ID, DebugHelloPacket.PACKET_CODEC);
+        PayloadTypeRegistry.playS2C().register(DebugShapesPacket.PACKET_ID, DebugShapesPacket.PACKET_CODEC);
 
+        ClientPlayNetworking.registerGlobalReceiver(DebugShapesPacket.PACKET_ID, this::handlePacket);
     }
 
     private void handleRenderFabulous(WorldRenderContext ctx) {
@@ -56,39 +55,21 @@ public class DebugRendererClient implements ClientModInitializer {
     }
 
     private void handleJoinGame(ClientPlayNetworkHandler handler, PacketSender sender, MinecraftClient client) {
-        var data = PacketByteBufs.create();
-        data.writeInt(PROTOCOL_VERSION);
-        ClientPlayNetworking.send(new Identifier("debug", "hello"), data);
+        sender.sendPacket(new DebugHelloPacket(PROTOCOL_VERSION));
     }
 
     private void handleDisconnect(ClientPlayNetworkHandler handler, MinecraftClient client) {
         renderer.clear();
     }
 
-    private void handlePacket(@NotNull MinecraftClient client, @NotNull ClientPlayNetworkHandler handler,
-                              @NotNull PacketByteBuf buffer, @NotNull PacketSender sender) {
-        var opCount = buffer.readVarInt();
-        for (int i = 0; i < opCount; i++) {
-            int op = buffer.readVarInt();
-            switch (op) {
-                case 0 -> { // SET
-                    var shapeId = buffer.readIdentifier();
-                    var shapeType = buffer.readEnumConstant(Shape.Type.class);
-                    renderer.add(shapeId, shapeType.deserialize(buffer));
-                }
-                case 1 -> { // REMOVE
-                    Identifier targetShape = buffer.readIdentifier();
-                    renderer.remove(targetShape);
-                }
-                case 2 -> { // CLEAR_NS
-                    String targetNamespace = buffer.readString(32767);
-                    renderer.remove(targetNamespace);
-                }
-                case 3 -> { // CLEAR
-                    renderer.clear();
-                }
+    private void handlePacket(@NotNull DebugShapesPacket packet, @NotNull ClientPlayNetworking.Context context) {
+        for (var operation : packet.operations()) {
+            switch (operation) {
+                case DebugShapesPacket.Set op -> renderer.add(op.namespaceId(), op.shape());
+                case DebugShapesPacket.Remove op -> renderer.remove(op.namespaceId());
+                case DebugShapesPacket.ClearNamespace op -> renderer.remove(op.namespace());
+                case DebugShapesPacket.Clear op -> renderer.clear();
             }
         }
     }
-
 }

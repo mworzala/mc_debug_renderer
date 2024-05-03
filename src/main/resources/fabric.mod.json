@@ -17,10 +17,7 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.mattworzala.debug.client.DebugRendererClient"
-    ],
-    "main": [
-      "com.mattworzala.debug.DebugRenderer"
+      "com.mattworzala.debug.DebugRendererClient"
     ]
   },
   "mixins": [
@@ -29,6 +26,6 @@
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
-    "minecraft": "1.20.4"
+    "minecraft": "1.20.6"
   }
 }

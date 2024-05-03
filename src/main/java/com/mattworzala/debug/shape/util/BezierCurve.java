@@ -1,4 +1,4 @@
-package com.mattworzala.debug.client.shape.util;
+package com.mattworzala.debug.shape.util;
 
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +34,6 @@ public class BezierCurve {
     }
 
     private static double bezierPoint(double t, double p0, double p1, double p2, double p3) {
-        return p0*Math.pow(1-t, 3) + 3*p1*Math.pow(1-t, 2)*t + 3*p2*(1-t)*t*t + p3*t*t*t;
+        return p0 * Math.pow(1 - t, 3) + 3 * p1 * Math.pow(1 - t, 2) * t + 3 * p2 * (1 - t) * t * t + p3 * t * t * t;
     }
 }

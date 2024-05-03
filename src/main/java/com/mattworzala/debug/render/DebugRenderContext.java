@@ -1,9 +1,8 @@
-package com.mattworzala.debug.client.render;
+package com.mattworzala.debug.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.Tessellator;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -94,14 +93,16 @@ public class DebugRenderContext {
             float dx = x - lastX;
             float dy = y - lastY;
             float dz = z - lastZ;
-            float distanceInv = 1.0f / (float)Math.sqrt(dx * dx + dy * dy + dz * dz);
+            float distanceInv = 1.0f / (float) Math.sqrt(dx * dx + dy * dy + dz * dz);
             this.builder.vertex(positionMat, lastX, lastY, lastZ)
                     .color(r, g, b, a)
-                    .normal(normalMat, dx *= distanceInv, dy *= distanceInv, dz *= distanceInv)
+//                    .normal(normalMat, dx *= distanceInv, dy *= distanceInv, dz *= distanceInv)
+                    .normal(dx *= distanceInv, dy *= distanceInv, dz *= distanceInv)
                     .next();
             this.builder.vertex(positionMat, x, y, z)
                     .color(r, g, b, a)
-                    .normal(normalMat, dx, dy, dz)
+//                    .normal(normalMat, dx, dy, dz)
+                    .normal(dx, dy, dz)
                     .next();
 
             hasLast = false;

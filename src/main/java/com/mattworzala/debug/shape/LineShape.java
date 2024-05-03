@@ -1,8 +1,8 @@
-package com.mattworzala.debug.client.shape;
+package com.mattworzala.debug.shape;
 
-import com.mattworzala.debug.client.render.DebugRenderContext;
-import com.mattworzala.debug.client.render.RenderLayer;
-import com.mattworzala.debug.client.render.RenderType;
+import com.mattworzala.debug.render.DebugRenderContext;
+import com.mattworzala.debug.render.RenderLayer;
+import com.mattworzala.debug.render.RenderType;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
@@ -12,17 +12,13 @@ import java.util.List;
 
 public class LineShape implements Shape {
 
-    public enum Type {
-        SINGLE,
-        STRIP,
-        LOOP
-    }
-
     private final Type type;
     private final List<Vec3d> points;
     private final int color;
     private final RenderLayer renderLayer;
     private final float lineWidth;
+
+    private Vec3d averagePoint;
 
     public LineShape(Type type, @NotNull List<Vec3d> points, int color, RenderLayer renderLayer, float lineWidth) {
         this.type = type;
@@ -30,19 +26,30 @@ public class LineShape implements Shape {
         this.color = color;
         this.renderLayer = renderLayer;
         this.lineWidth = lineWidth;
+
+        this.averagePoint = new Vec3d(0, 0, 0);
+        for (Vec3d point : points) {
+            this.averagePoint = this.averagePoint.add(point);
+        }
+        this.averagePoint = this.averagePoint.multiply(1.0 / points.size());
     }
 
     public LineShape(@NotNull PacketByteBuf buffer) {
-        this.type = buffer.readEnumConstant(Type.class);
-        this.points = buffer.readList(buf -> new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble()));
-        this.color = buffer.readInt();
-        this.renderLayer = buffer.readEnumConstant(RenderLayer.class);
-        this.lineWidth = buffer.readFloat();
+        this(buffer.readEnumConstant(Type.class),
+                buffer.readList(buf -> new Vec3d(buf.readDouble(), buf.readDouble(), buf.readDouble())),
+                buffer.readInt(),
+                buffer.readEnumConstant(RenderLayer.class),
+                buffer.readFloat());
     }
 
     @Override
     public void render(@NotNull DebugRenderContext context) {
         context.submit(this::render0, RenderType.LINES, renderLayer);
+    }
+
+    @Override
+    public double distanceTo(@NotNull Vec3d pos) {
+        return pos.squaredDistanceTo(averagePoint);
     }
 
     private void render0(@NotNull DebugRenderContext context) {
@@ -69,5 +76,11 @@ public class LineShape implements Shape {
                 context.vertex(points.get(0));
             }
         }
+    }
+
+    public enum Type {
+        SINGLE,
+        STRIP,
+        LOOP
     }
 }

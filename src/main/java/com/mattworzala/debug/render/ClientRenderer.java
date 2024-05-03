@@ -1,6 +1,6 @@
-package com.mattworzala.debug.client.render;
+package com.mattworzala.debug.render;
 
-import com.mattworzala.debug.client.shape.Shape;
+import com.mattworzala.debug.shape.Shape;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -49,7 +50,13 @@ public class ClientRenderer {
         Matrix3f normal = matrices.peek().getNormalMatrix();
         var context = new DebugRenderContext(pose, normal);
 
-        for (var shape : shapes.values()) {
+        var ordered = new ArrayList<>(shapes.values());
+        ordered.sort((a, b) -> {
+            var aDist = a.distanceTo(camera.getPos());
+            var bDist = b.distanceTo(camera.getPos());
+            return Double.compare(bDist, aDist);
+        });
+        for (var shape : ordered) {
             shape.render(context);
         }
 

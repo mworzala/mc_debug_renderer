@@ -1,10 +1,8 @@
-package com.mattworzala.debug.client.render;
+package com.mattworzala.debug.render;
 
-import com.google.common.collect.ImmutableMap;
 import net.minecraft.client.gl.ShaderProgram;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
 import org.jetbrains.annotations.NotNull;
 

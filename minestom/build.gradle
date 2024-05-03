@@ -12,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'net.minestom:minestom-snapshots:705ec5cc07'
+    compileOnly 'net.minestom:minestom-snapshots:1_20_5-e63c9def24'
 
-    testImplementation 'net.minestom:minestom-snapshots:705ec5cc07'
+    testImplementation 'net.minestom:minestom-snapshots:1_20_5-e63c9def24'
 }
 
 java {

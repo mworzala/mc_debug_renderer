@@ -1,12 +1,17 @@
-package com.mattworzala.debug.client.shape;
+package com.mattworzala.debug.shape;
 
-import com.mattworzala.debug.client.render.DebugRenderContext;
+import com.mattworzala.debug.render.DebugRenderContext;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Function;
 
 public interface Shape {
+
+    void render(@NotNull DebugRenderContext context);
+
+    double distanceTo(@NotNull Vec3d pos);
 
     enum Type {
         LINE(LineShape::new),
@@ -24,7 +29,5 @@ public interface Shape {
             return deserializer.apply(buffer);
         }
     }
-
-    void render(@NotNull DebugRenderContext context);
 
 }

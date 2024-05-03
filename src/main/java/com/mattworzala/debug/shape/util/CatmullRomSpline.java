@@ -1,4 +1,4 @@
-package com.mattworzala.debug.client.shape.util;
+package com.mattworzala.debug.shape.util;
 
 import net.minecraft.util.math.Vec3d;
 
