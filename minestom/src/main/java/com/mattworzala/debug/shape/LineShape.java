@@ -3,13 +3,12 @@ package com.mattworzala.debug.shape;
 import com.mattworzala.debug.Layer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.network.NetworkBuffer;
+import net.minestom.server.network.NetworkBufferTemplate;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static net.minestom.server.network.NetworkBuffer.*;
 
 /**
  * A line connected with multiple points.
@@ -19,7 +18,6 @@ import static net.minestom.server.network.NetworkBuffer.*;
  * @param color     The color of the line, in ARGB format.
  * @param layer     The layer of the line.
  */
-@SuppressWarnings("UnstableApiUsage")
 public record LineShape(
         @NotNull Type type,
         @NotNull List<Point> points,
@@ -34,25 +32,16 @@ public record LineShape(
         LOOP
     }
 
-    @Override
-    public int id() {
-        return 0;
-    }
-
-    @Override
-    public void write(@NotNull NetworkBuffer buffer) {
-        buffer.writeEnum(Type.class, type);
-        buffer.writeCollection(points, (buf, point) -> {
-            buf.write(DOUBLE, point.x());
-            buf.write(DOUBLE, point.y());
-            buf.write(DOUBLE, point.z());
-        });
-        buffer.write(INT, color);
-        buffer.writeEnum(Layer.class, layer);
-        buffer.write(FLOAT, lineWidth);
-    }
+    public static final NetworkBuffer.Type<LineShape> SERIALIZER = NetworkBufferTemplate.template(
+            NetworkBuffer.Enum(Type.class), LineShape::type,
+            NetworkBuffer.VECTOR3D.list(), LineShape::points,
+            NetworkBuffer.INT, LineShape::color,
+            NetworkBuffer.Enum(Layer.class), LineShape::layer,
+            NetworkBuffer.FLOAT, LineShape::lineWidth,
+            LineShape::new);
 
     public static class Builder {
+
 
         private Type type = Type.SINGLE;
         private final List<Point> points = new ArrayList<>();

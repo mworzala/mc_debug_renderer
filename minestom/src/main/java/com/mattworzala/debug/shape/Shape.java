@@ -1,13 +1,9 @@
 package com.mattworzala.debug.shape;
 
-import net.minestom.server.network.NetworkBuffer;
-import org.jetbrains.annotations.NotNull;
-
 /**
  * A shape that can be rendered.
  * New shapes cannot be added without a rendered also being added to the client-side mod.
  */
-@SuppressWarnings("UnstableApiUsage")
 public interface Shape {
 
     /**
@@ -31,9 +27,4 @@ public interface Shape {
     static SplineShape.Builder spline() {
         return new SplineShape.Builder();
     }
-
-    int id();
-
-    void write(@NotNull NetworkBuffer buffer);
-
 }

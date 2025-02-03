@@ -2,22 +2,20 @@ package com.mattworzala.debug;
 
 import com.mattworzala.debug.shape.Shape;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.network.NetworkBuffer;
 import net.minestom.server.network.packet.server.common.PluginMessagePacket;
 import net.minestom.server.utils.NamespaceID;
-import net.minestom.server.utils.PacketUtils;
+import net.minestom.server.utils.PacketSendingUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static net.minestom.server.network.NetworkBuffer.VAR_INT;
 
 /**
  * A message to send the client to show debug objects.
  *
  * @param ops The operations to perform.
  */
-@SuppressWarnings("UnstableApiUsage")
 public record DebugMessage(
         List<Operation> ops
 ) {
@@ -33,20 +31,16 @@ public record DebugMessage(
      * Sends this DebugMessage to an audience.
      */
     public void sendTo(Audience audience) {
-        PacketUtils.sendPacket(audience, getPacket());
+        PacketSendingUtils.sendPacket(audience, getPacket());
     }
 
     /**
      * @return The packet to send to an audience.
      */
     public PluginMessagePacket getPacket() {
-        var buffer = new NetworkBuffer(1024);
-        buffer.write(VAR_INT, ops.size());
-        for (Operation op : ops) {
-            op.write(buffer);
-        }
-        byte[] bytes = buffer.readBytes(buffer.writeIndex());
-        return new PluginMessagePacket("debug:shapes", bytes);
+        return new PluginMessagePacket("debug:shapes", NetworkBuffer.makeArray(buffer -> {
+            buffer.write(SimplePacketRegistry.OPERATION_SERIALIZER.list(), ops);
+        }));
     }
 
 
@@ -55,54 +49,101 @@ public record DebugMessage(
         private final List<Operation> ops = new ArrayList<>();
 
         /**
-         * Sets a shape with the specified namespace ID.
+         * Sets a shape with the specified key.
          *
-         * @param namespaceId The namespace ID for this shape. If reused, the previous shape will be replaced.
-         * @param shape       The shape to associate with the namespace ID.
+         * @param key The key for this shape. If reused, the previous shape will be replaced.
+         * @param shape       The shape to associate with the key.
          * @return The builder.
          */
-        public Builder set(String namespaceId, Shape shape) {
-            return set(NamespaceID.from(namespaceId), shape);
+        public Builder set(String key, Shape shape) {
+            return set(Key.key(key), shape);
         }
 
         /**
+         * Use {@link #set(Key, Shape)} instead.
          * Sets a shape with the specified namespace ID.
          *
          * @param id    The namespace ID for this shape. If reused, the previous shape will be replaced.
          * @param shape The shape to associate with the namespace ID.
          * @return The builder.
          */
+        @Deprecated
         public Builder set(NamespaceID id, Shape shape) {
             ops.add(new Operation.Set(id, shape));
             return this;
         }
 
         /**
-         * Removes a shape with a specified namespace ID.
+         * Sets a shape with the specified key.
          *
-         * @param namespaceId The namespace ID to remove.
+         * @param key    The key for this shape. If reused, the previous shape will be replaced.
+         * @param shape The shape to associate with the key.
          * @return The builder.
          */
-        public Builder remove(String namespaceId) {
-            return remove(NamespaceID.from(namespaceId));
+        public Builder set(Key key, Shape shape) {
+            ops.add(new Operation.Set(key, shape));
+            return this;
         }
 
         /**
+         * Removes a shape with a specified key.
+         *
+         * @param key The key to remove.
+         * @return The builder.
+         */
+        public Builder remove(String key) {
+            return remove(Key.key(key));
+        }
+
+        /**
+         * Use {@link #remove(Key)} instead.
          * Removes a shape with a specified namespace ID.
          *
          * @param id The namespace ID to remove.
          * @return The builder.
          */
+        @Deprecated
         public Builder remove(NamespaceID id) {
             ops.add(new Operation.Remove(id));
             return this;
         }
 
-        public Builder clear(String namespace) {
-            ops.add(new Operation.ClearNS(namespace));
+        /**
+         * Removes a shape with a specified namespace ID.
+         *
+         * @param key The key to remove.
+         * @return The builder.
+         */
+        public Builder remove(Key key) {
+            ops.add(new Operation.Remove(key));
             return this;
         }
 
+        /**
+         * Clears all shapes in a key.
+         * @param key The key to clear.
+         * @return The builder.
+         */
+        public Builder clear(Key key) {
+            ops.add(new Operation.ClearNS(key));
+            return this;
+        }
+
+        /**
+         * Clears all shapes in a key.
+         * @param key The key to clear.
+         * @return The builder.
+         */
+        public Builder clear(String key) {
+            ops.add(new Operation.ClearNS(Key.key(key)));
+            return this;
+        }
+
+        /**
+         * Clears all shapes.
+         *
+         * @return The builder.
+         */
         public Builder clear() {
             ops.add(new Operation.Clear());
             return this;

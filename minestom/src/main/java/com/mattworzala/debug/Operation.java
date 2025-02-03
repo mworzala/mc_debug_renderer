@@ -1,66 +1,74 @@
 package com.mattworzala.debug;
 
 import com.mattworzala.debug.shape.Shape;
+import net.kyori.adventure.key.Key;
 import net.minestom.server.network.NetworkBuffer;
+import net.minestom.server.network.NetworkBufferTemplate;
 import net.minestom.server.utils.NamespaceID;
-import net.minestom.server.utils.binary.BinaryWriter;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minestom.server.network.NetworkBuffer.STRING;
-import static net.minestom.server.network.NetworkBuffer.VAR_INT;
-
-@SuppressWarnings("UnstableApiUsage")
 public interface Operation {
 
-    void write(@NotNull NetworkBuffer buffer);
-
     record Set(
-            NamespaceID id,
+            Key key,
             Shape shape
     ) implements Operation {
-        private static final int ID = 0;
+        public static final NetworkBuffer.Type<Set> SERIALIZER = NetworkBufferTemplate.template(
+                KeyType.KEY, Set::key,
+                SimplePacketRegistry.SHAPE_SERIALIZER, Set::shape,
+                Set::new
+        );
 
-        @Override
-        public void write(@NotNull NetworkBuffer buffer) {
-            buffer.write(VAR_INT, ID);
-            buffer.write(STRING, id.asString());
-            buffer.write(VAR_INT, shape.id());
-            shape.write(buffer);
+        @Deprecated
+        public Set(@NotNull NamespaceID namespace, Shape shape) {
+            this(namespace.key(), shape);
+        }
+
+        @Deprecated
+        public NamespaceID id() {
+            return NamespaceID.from(key);
         }
     }
 
     record Remove(
-            @NotNull NamespaceID id
+            @NotNull Key key
     ) implements Operation {
-        private static final int ID = 1;
+        public static final NetworkBuffer.Type<Remove> SERIALIZER = NetworkBufferTemplate.template(
+                KeyType.KEY, Remove::key,
+                Remove::new
+        );
 
-        @Override
-        public void write(@NotNull NetworkBuffer buffer) {
-            buffer.write(VAR_INT, ID);
-            buffer.write(STRING, id.asString());
+        @Deprecated
+        public Remove(@NotNull NamespaceID namespace) {
+            this(namespace.key());
+        }
+
+        @Deprecated
+        public NamespaceID id() {
+            return NamespaceID.from(key);
         }
     }
 
     record ClearNS(
-            @NotNull String namespace
+            @NotNull Key key
     ) implements Operation {
-        private static final int ID = 2;
+        public static final NetworkBuffer.Type<ClearNS> SERIALIZER = NetworkBufferTemplate.template(
+                KeyType.KEY, ClearNS::key,
+                ClearNS::new
+        );
 
-        @Override
-        public void write(@NotNull NetworkBuffer buffer) {
-            buffer.write(VAR_INT, ID);
-            buffer.write(STRING, namespace);
+        @Deprecated
+        public ClearNS(@NotNull String namespace) {
+            this(Key.key(namespace));
+        }
+
+        @Deprecated
+        public @NotNull String namespace() {
+            return key.asString();
         }
     }
 
-    final class Clear implements Operation {
-        private static final int ID = 3;
-
-        @Override
-        public void write(@NotNull NetworkBuffer buffer) {
-            buffer.write(VAR_INT, ID);
-        }
+    record Clear() implements Operation {
+        public static final NetworkBuffer.Type<Clear> SERIALIZER = NetworkBufferTemplate.template(Clear::new);
     }
-
-
 }

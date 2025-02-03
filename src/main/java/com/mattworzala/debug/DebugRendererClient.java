@@ -3,7 +3,6 @@ package com.mattworzala.debug;
 import com.mattworzala.debug.network.DebugHelloPacket;
 import com.mattworzala.debug.network.DebugShapesPacket;
 import com.mattworzala.debug.render.ClientRenderer;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -45,7 +44,6 @@ public class DebugRendererClient implements ClientModInitializer {
 
     private void handleRenderFabulous(WorldRenderContext ctx) {
         if (!ctx.advancedTranslucency()) return;
-        RenderSystem.applyModelViewMatrix();
         renderer.render(ctx.matrixStack(), ctx.camera());
     }
 
@@ -68,7 +66,7 @@ public class DebugRendererClient implements ClientModInitializer {
                 case DebugShapesPacket.Set op -> renderer.add(op.namespaceId(), op.shape());
                 case DebugShapesPacket.Remove op -> renderer.remove(op.namespaceId());
                 case DebugShapesPacket.ClearNamespace op -> renderer.remove(op.namespace());
-                case DebugShapesPacket.Clear op -> renderer.clear();
+                case DebugShapesPacket.Clear ignored -> renderer.clear();
             }
         }
     }

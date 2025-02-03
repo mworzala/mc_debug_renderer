@@ -1,35 +1,33 @@
 package com.mattworzala.debug.render;
 
-import net.minecraft.client.gl.ShaderProgram;
-import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.gl.ShaderProgramKey;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
 public record RenderType(
         @NotNull VertexFormat.DrawMode drawMode,
         @NotNull VertexFormat vertexFormat,
-        @NotNull Supplier<ShaderProgram> shader
+        ShaderProgramKey shader
 ) {
 
     public static final RenderType QUADS = new RenderType(
             VertexFormat.DrawMode.QUADS,
             VertexFormats.POSITION_COLOR,
-            GameRenderer::getPositionColorProgram
+            ShaderProgramKeys.RENDERTYPE_LINES
     );
 
     public static final RenderType LINES = new RenderType(
             VertexFormat.DrawMode.LINES,
             VertexFormats.LINES,
-            GameRenderer::getRenderTypeLinesProgram
+            ShaderProgramKeys.RENDERTYPE_LINES
     );
 
     public static final RenderType LINE_STRIP = new RenderType(
             VertexFormat.DrawMode.LINE_STRIP,
             VertexFormats.LINES,
-            GameRenderer::getRenderTypeLinesProgram
+            ShaderProgramKeys.RENDERTYPE_LINES
     );
 
 }

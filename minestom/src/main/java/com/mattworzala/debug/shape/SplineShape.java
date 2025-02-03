@@ -3,14 +3,13 @@ package com.mattworzala.debug.shape;
 import com.mattworzala.debug.Layer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.network.NetworkBuffer;
+import net.minestom.server.network.NetworkBufferTemplate;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minestom.server.network.NetworkBuffer.*;
 
-@SuppressWarnings("UnstableApiUsage")
 public record SplineShape(
         @NotNull Type type,
         @NotNull List<Point> points,
@@ -24,24 +23,15 @@ public record SplineShape(
         BEZIER,
     }
 
-    @Override
-    public int id() {
-        return 1;
-    }
-
-    @Override
-    public void write(@NotNull NetworkBuffer buffer) {
-        buffer.writeEnum(Type.class, type);
-        buffer.writeCollection(points, (buf, point) -> {
-            buf.write(DOUBLE, point.x());
-            buf.write(DOUBLE, point.y());
-            buf.write(DOUBLE, point.z());
-        });
-        buffer.write(BOOLEAN, loop);
-        buffer.write(INT, color);
-        buffer.writeEnum(Layer.class, layer);
-        buffer.write(FLOAT, lineWidth);
-    }
+    public static final NetworkBuffer.Type<SplineShape> SERIALIZER = NetworkBufferTemplate.template(
+            NetworkBuffer.Enum(Type.class), SplineShape::type,
+            NetworkBuffer.VECTOR3D.list(), SplineShape::points,
+            NetworkBuffer.BOOLEAN, SplineShape::loop,
+            NetworkBuffer.INT, SplineShape::color,
+            NetworkBuffer.Enum(Layer.class), SplineShape::layer,
+            NetworkBuffer.FLOAT, SplineShape::lineWidth,
+            SplineShape::new
+    );
 
     public static class Builder {
         private Type type = Type.CATMULL_ROM;

@@ -3,13 +3,10 @@ package com.mattworzala.debug.shape;
 import com.mattworzala.debug.Layer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.network.NetworkBuffer;
+import net.minestom.server.network.NetworkBufferTemplate;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minestom.server.network.NetworkBuffer.DOUBLE;
-import static net.minestom.server.network.NetworkBuffer.INT;
-
-@SuppressWarnings("UnstableApiUsage")
 public record QuadShape(
         @NotNull Point a,
         @NotNull Point b,
@@ -19,28 +16,15 @@ public record QuadShape(
         @NotNull Layer renderLayer
 ) implements Shape {
 
-    @Override
-    public int id() {
-        return 2;
-    }
-
-    @Override
-    public void write(@NotNull NetworkBuffer buffer) {
-        buffer.write(DOUBLE, a.x());
-        buffer.write(DOUBLE, a.y());
-        buffer.write(DOUBLE, a.z());
-        buffer.write(DOUBLE, b.x());
-        buffer.write(DOUBLE, b.y());
-        buffer.write(DOUBLE, b.z());
-        buffer.write(DOUBLE, c.x());
-        buffer.write(DOUBLE, c.y());
-        buffer.write(DOUBLE, c.z());
-        buffer.write(DOUBLE, d.x());
-        buffer.write(DOUBLE, d.y());
-        buffer.write(DOUBLE, d.z());
-        buffer.write(INT, color);
-        buffer.writeEnum(Layer.class, renderLayer);
-    }
+    public static final NetworkBuffer.Type<QuadShape> SERIALIZER = NetworkBufferTemplate.template(
+            NetworkBuffer.VECTOR3D, QuadShape::a,
+            NetworkBuffer.VECTOR3D, QuadShape::b,
+            NetworkBuffer.VECTOR3D, QuadShape::c,
+            NetworkBuffer.VECTOR3D, QuadShape::d,
+            NetworkBuffer.INT, QuadShape::color,
+            NetworkBuffer.Enum(Layer.class), QuadShape::renderLayer,
+            QuadShape::new
+    );
 
     public static class Builder {
         private Point a;

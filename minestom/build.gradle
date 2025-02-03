@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'com.mattworzala.debug'
-version '1.19.2'
+version '1.21.3'
 
 repositories {
     mavenCentral()
@@ -12,9 +12,9 @@ repositories {
 }
 
 dependencies {
-    compileOnly 'net.minestom:minestom-snapshots:1_20_5-e63c9def24'
+    compileOnly "net.minestom:minestom-snapshots:${project.minestom_version}"
 
-    testImplementation 'net.minestom:minestom-snapshots:1_20_5-e63c9def24'
+    testImplementation "net.minestom:minestom-snapshots:${project.minestom_version}"
 }
 
 java {

@@ -3,12 +3,10 @@ package com.mattworzala.debug.shape;
 import com.mattworzala.debug.Layer;
 import net.minestom.server.coordinate.Point;
 import net.minestom.server.network.NetworkBuffer;
+import net.minestom.server.network.NetworkBufferTemplate;
 import net.minestom.server.utils.validate.Check;
 import org.jetbrains.annotations.NotNull;
 
-import static net.minestom.server.network.NetworkBuffer.*;
-
-@SuppressWarnings("UnstableApiUsage")
 public record BoxShape(
         Point start,
         Point end,
@@ -18,26 +16,15 @@ public record BoxShape(
         Layer edgeLayer,
         float edgeWidth
 ) implements Shape {
-
-    @Override
-    public int id() {
-        return 3;
-    }
-
-    @Override
-    public void write(@NotNull NetworkBuffer buffer) {
-        buffer.write(DOUBLE, start.x());
-        buffer.write(DOUBLE, start.y());
-        buffer.write(DOUBLE, start.z());
-        buffer.write(DOUBLE, end.x());
-        buffer.write(DOUBLE, end.y());
-        buffer.write(DOUBLE, end.z());
-        buffer.write(INT, faceColor);
-        buffer.writeEnum(Layer.class, faceLayer);
-        buffer.write(INT, edgeColor);
-        buffer.writeEnum(Layer.class, edgeLayer);
-        buffer.write(FLOAT, edgeWidth);
-    }
+    public static final NetworkBuffer.Type<BoxShape> SERIALIZER = NetworkBufferTemplate.template(
+            NetworkBuffer.VECTOR3D, BoxShape::start,
+            NetworkBuffer.VECTOR3D, BoxShape::end,
+            NetworkBuffer.INT, BoxShape::faceColor,
+            NetworkBuffer.Enum(Layer.class), BoxShape::faceLayer,
+            NetworkBuffer.INT, BoxShape::edgeColor,
+            NetworkBuffer.Enum(Layer.class), BoxShape::edgeLayer,
+            NetworkBuffer.FLOAT, BoxShape::edgeWidth,
+            BoxShape::new);
 
     public static class Builder {
 
