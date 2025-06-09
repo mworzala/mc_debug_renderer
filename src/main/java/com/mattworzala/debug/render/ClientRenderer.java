@@ -1,13 +1,14 @@
 package com.mattworzala.debug.render;
 
 import com.mattworzala.debug.shape.Shape;
-import com.mojang.blaze3d.systems.RenderSystem;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.BufferAllocator;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
+import me.x150.renderer.render.WorldRenderContext;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -34,21 +35,11 @@ public class ClientRenderer {
     }
 
     public void render(MatrixStack matrices, Camera camera) {
+        VertexConsumerProvider.Immediate vcp = VertexConsumerProvider.immediate(new BufferAllocator(16 * 1024));
+        WorldRenderContext context = new WorldRenderContext(MinecraftClient.getInstance(), vcp);
+
         matrices.push();
         matrices.translate(-camera.getPos().x, -camera.getPos().y, -camera.getPos().z);
-
-        RenderSystem.disableCull();
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-
-        // Polygon offset makes our geometry render over other geometry with the same depth
-        // See: https://www.khronos.org/registry/OpenGL-Refpages/gl4/html/glPolygonOffset.xhtml
-        RenderSystem.enablePolygonOffset();
-        RenderSystem.polygonOffset(-1.0f, -1.0f);
-
-        Matrix4f pose = matrices.peek().getPositionMatrix();
-        Matrix3f normal = matrices.peek().getNormalMatrix();
-        var context = new DebugRenderContext(pose, normal);
 
         var ordered = new ArrayList<>(shapes.values());
         ordered.sort((a, b) -> {
@@ -56,14 +47,13 @@ public class ClientRenderer {
             var bDist = b.distanceTo(camera.getPos());
             return Double.compare(bDist, aDist);
         });
+
         for (var shape : ordered) {
-            shape.render(context);
+            
+            shape.render(matrices, context, vcp);
         }
 
-        RenderSystem.disablePolygonOffset();
-        RenderSystem.enableCull();
-
         matrices.pop();
+        vcp.draw();
     }
-
 }

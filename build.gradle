@@ -1,5 +1,5 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.10-SNAPSHOT'
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
@@ -16,6 +16,8 @@ dependencies {
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    include modImplementation("io.github.0x3c50.renderer:renderer-fabric:2.0.2")
+    implementation("org.lwjgl:lwjgl-harfbuzz:3.3.6")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
@@ -97,7 +99,7 @@ modrinth {
     versionNumber = project.version.toString()
     versionType = "release"
     uploadFile = remapJar
-    gameVersions = ["1.20.6"]
+    gameVersions = ["1.21.5"]
     dependencies {
         required.project "fabric-api"
     }
