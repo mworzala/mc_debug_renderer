@@ -1,6 +1,8 @@
 package com.mattworzala.debug.shape;
 
-import com.mattworzala.debug.render.DebugRenderContext;
+import me.x150.renderer.render.WorldRenderContext;
+import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.Vec3d;
 import org.jetbrains.annotations.NotNull;
@@ -9,7 +11,8 @@ import java.util.function.Function;
 
 public interface Shape {
 
-    void render(@NotNull DebugRenderContext context);
+    
+    void render(@NotNull MatrixStack matrices, @NotNull WorldRenderContext context, @NotNull VertexConsumerProvider vcp);
 
     double distanceTo(@NotNull Vec3d pos);
 
@@ -29,5 +32,4 @@ public interface Shape {
             return deserializer.apply(buffer);
         }
     }
-
 }
